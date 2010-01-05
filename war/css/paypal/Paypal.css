@@ -1,0 +1,16 @@
+.packageHeader {
+  background-color: #2062B8;
+  color: white;
+  font-style: italic;
+}
+
+
+.packageList {
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
+}
+
+.title{
+	color: #2062B8;
+}

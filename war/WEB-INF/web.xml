@@ -5,20 +5,10 @@
 
 <web-app>
   
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.appspot.demo.paypal.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/demo/greet</url-pattern>
-  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Demo.html</welcome-file>
+    <welcome-file>Paypal.html</welcome-file>
   </welcome-file-list>
 
 </web-app>
