@@ -72,9 +72,8 @@ public class PaypalCustomer {
 	@Persistent
 	private String shipToCountryCode;
 	
-	@Persistent(mappedBy = "customer")
-	@Element(dependent = "true")
-	private List invoices = new ArrayList();
+	@Persistent
+	private List<Key> invoiceKeys = new ArrayList<Key>();
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -220,12 +219,20 @@ public class PaypalCustomer {
 		return shipToCountryCode;
 	}
 	
-	public List getInvoices(){
-		return this.invoices;
+	public List<Key> getInvoiceKeys(){
+		return this.invoiceKeys;
 	}
 	
-	public void setInvoices(List invoices){
-		this.invoices = invoices;
+	public void setInvoices(List<Key> invoiceKeys){
+		this.invoiceKeys = invoiceKeys;
+	}
+
+	public void setId(Key id) {
+		this.id = id;
+	}
+
+	public Key getId() {
+		return id;
 	}
 
 }

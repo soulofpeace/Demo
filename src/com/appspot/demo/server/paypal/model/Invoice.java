@@ -3,21 +3,24 @@ package com.appspot.demo.server.paypal.model;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
+@PersistenceCapable(identityType =  IdentityType.APPLICATION, detachable = "true")
 public class Invoice {
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key id;
 	
 	@Persistent
-	private PaypalCustomer customer;
+	private Key customerId;
 	
 	@Persistent
-	private Package packageName;
+	private Key productPackageId;
 	
 	@Persistent
 	private String paypalRecurringPaymentProfileId;
@@ -36,20 +39,20 @@ public class Invoice {
 		return id;
 	}
 
-	public void setCustomer(PaypalCustomer customer) {
-		this.customer = customer;
+	public void setCustomerId(Key customerId) {
+		this.customerId = customerId;
 	}
 
-	public PaypalCustomer getCustomer() {
-		return customer;
+	public Key getCustomerId() {
+		return customerId;
 	}
 
-	public void setPackageName(Package packageName) {
-		this.packageName = packageName;
+	public void setProductPackageId(Key productPackageId) {
+		this.productPackageId = productPackageId;
 	}
 
-	public Package getPackageName() {
-		return packageName;
+	public Key getProductPackageId() {
+		return this.productPackageId;
 	}
 
 	public void setPaypalRecurringPaymentProfileId(
