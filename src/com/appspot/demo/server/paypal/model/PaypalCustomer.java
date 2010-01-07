@@ -1,5 +1,9 @@
 package com.appspot.demo.server.paypal.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -9,7 +13,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType =  IdentityType.APPLICATION, detachable = "true")
-public class PaypalCustomers {
+public class PaypalCustomer {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key id;
@@ -68,8 +72,9 @@ public class PaypalCustomers {
 	@Persistent
 	private String shipToCountryCode;
 	
-	@Persistent
-	private Package packageName;
+	@Persistent(mappedBy = "customer")
+	@Element(dependent = "true")
+	private List invoices = new ArrayList();
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -214,6 +219,13 @@ public class PaypalCustomers {
 	public String getShipToCountryCode() {
 		return shipToCountryCode;
 	}
-
+	
+	public List getInvoices(){
+		return this.invoices;
+	}
+	
+	public void setInvoices(List invoices){
+		this.invoices = invoices;
+	}
 
 }

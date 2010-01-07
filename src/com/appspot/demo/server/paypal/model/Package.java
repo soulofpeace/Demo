@@ -32,11 +32,15 @@ public class Package {
 	private double packageCost;
 	
 	@Persistent
-	private int type;
+	private String billingPeriod;
 	
-	@Persistent(mappedBy="package")
+	@Persistent 
+	private int billingFrequency;
+	
+	@Persistent(mappedBy="packageName")
 	@Element(dependent="true")
-	private List payPalCustomers = new ArrayList();
+	private List invoices = new ArrayList();
+	
 
 	public void setId(Key id) {
 		this.id = id;
@@ -78,21 +82,31 @@ public class Package {
 		return packageCost;
 	}
 
-	public void setType(int type) {
-		this.type = type;
+	public void setBillingPeriod(String billingPeriod) {
+		this.billingPeriod=billingPeriod;
 	}
 
-	public int getType() {
-		return type;
+	public String getBillingPeriod() {
+		return this.billingPeriod;
+	}
+	
+	public List getInvoices(){
+		return this.invoices;
+	}
+	
+	public void setInvoices(List invoices){
+		this.invoices=invoices;
 	}
 
-	public void setPayPalCustomers(List payPalCustomers) {
-		this.payPalCustomers = payPalCustomers;
+	public void setBillingFrequency(int billingFrequency) {
+		this.billingFrequency = billingFrequency;
 	}
 
-	public List getPayPalCustomers() {
-		return payPalCustomers;
+	public int getBillingFrequency() {
+		return billingFrequency;
 	}
+
+	
 	
 	
 }
