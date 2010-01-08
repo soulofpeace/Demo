@@ -13,7 +13,7 @@
   
     <servlet-mapping>
         <servlet-name>DemoDispatcher</servlet-name>
-        <url-pattern>/paypal/*</url-pattern>
+        <url-pattern>/demo/*</url-pattern>
     </servlet-mapping>
   
   

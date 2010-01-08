@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 public class PaypalPackage implements EntryPoint {
 
@@ -18,30 +20,31 @@ public class PaypalPackage implements EntryPoint {
 	public void onModuleLoad() {
 		// TODO Auto-generated method stub
 		final FormPanel addPackageForm = new FormPanel();
-		addPackageForm.setAction("/paypal/package/add");
+		addPackageForm.setAction("/demo/paypal/productpackage/add");
 		addPackageForm.setMethod(FormPanel.METHOD_POST);
+		addPackageForm.setEncoding(FormPanel.ENCODING_URLENCODED);
 		VerticalPanel containerPanel = new VerticalPanel();
 		
 		Label packageNameLabel = new Label("Package Name");
-		TextBox packageNameInput = new TextBox();
+		final TextBox packageNameInput = new TextBox();
 		packageNameInput.setName("packageName");
 		containerPanel.add(packageNameLabel);
 		containerPanel.add(packageNameInput);
 		
 		Label packageDescriptionLabel = new Label("Package Description");
-		TextBox packageDescriptionInput = new TextBox();
+		final TextBox packageDescriptionInput = new TextBox();
 		packageDescriptionInput.setName("packageDescription");
 		containerPanel.add(packageDescriptionLabel);
 		containerPanel.add(packageDescriptionInput);
 		
 		Label packageImageURLLabel = new Label("Package Image URL");
-		TextBox packageImageURLInput = new TextBox();
+		final TextBox packageImageURLInput = new TextBox();
 		packageImageURLInput.setName("packageImageURL");
 		containerPanel.add(packageImageURLLabel);
 		containerPanel.add(packageImageURLInput);
 	
 		Label packageCostLabel = new Label("Package Cost");
-		TextBox packageCostInput = new TextBox();
+		final TextBox packageCostInput = new TextBox();
 		packageCostInput.setName("packageCost");
 		containerPanel.add(packageCostLabel);
 		containerPanel.add(packageCostInput);
@@ -58,7 +61,7 @@ public class PaypalPackage implements EntryPoint {
 		containerPanel.add(billingPeriodListBox);
 		
 		Label billingFrequencyLabel = new Label("Billing Frequency");
-		TextBox billingFrequencyInput = new TextBox();
+		final TextBox billingFrequencyInput = new TextBox();
 		billingFrequencyInput.setName("billingFrequency");
 		containerPanel.add(billingFrequencyLabel);
 		containerPanel.add(billingFrequencyInput);
@@ -70,6 +73,18 @@ public class PaypalPackage implements EntryPoint {
 		});
 		containerPanel.add(addButton);
 		addPackageForm.setWidget(containerPanel);
+		addPackageForm.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+			
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				// TODO Auto-generated method stub
+				packageNameInput.setText("");
+				packageDescriptionInput.setText("");
+				packageImageURLInput.setText("");
+				packageCostInput.setText("");
+				billingFrequencyInput.setText("");
+			}
+		});
 		RootPanel.get().add(addPackageForm);
 	}
 
