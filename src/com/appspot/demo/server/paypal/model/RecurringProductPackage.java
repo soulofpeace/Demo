@@ -13,7 +13,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType =  IdentityType.APPLICATION, detachable = "true")
-public class ProductPackage {
+public class RecurringProductPackage {
 	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

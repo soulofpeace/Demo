@@ -8,4 +8,51 @@
         <context:component-scan base-package="com.appspot.demo"/>
         <bean id="persistenceManagerFactory" factory-bean="PMF" factory-method="persistenceManagerFactory" />
         
+        <bean id="paypalCaller" class="com.appspot.demo.server.paypal.service.util.PaypalCaller">
+        	<property name="payPalServer" value="https://api.sandbox.paypal.com/nvp" />
+        </bean>
+        
+        <bean id="apiCredential" class="com.appspot.demo.server.paypal.service.util.APICredential">
+        	<property name="user" value="sell1_1256008723_biz_api1.socialwok.com"/>
+        	<property name="password" value="1256008736" />
+        	<property name="version" value="56.0" />
+        	<property name="signature" value="AyAQA1q4x3jihgYNo.MlslDeJ.h3AKyuoMd142QcPSPklX6uVwULY.87"/>
+        </bean>
+        
+        <bean id="paypalCallerService" class="com.appspot.demo.server.paypal.service.util.PaypalCallerService">
+        	<property name="apiCredential" ref="apiCredential"/>
+        	<property name="payPalCaller" ref="paypalCaller"/>
+        </bean>
+        
+        <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="mediaTypes">
+        	<map>
+        		<entry key="html" value="text/html"/>
+        		<entry key="json" value="application/json"/>
+     		</map>
+  		</property>
+   		<property name="viewResolvers">
+     		<list>
+       			<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+      			 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      			 	<property name="prefix" value="/WEB-INF/jsp/"/>
+         			<property name="suffix" value=".jsp"/>
+      			</bean>
+     		</list>
+  		 </property>
+   		<property name="defaultViews">
+     		<list>
+       			<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+     		</list>
+   		</property>
+	</bean>
+ 
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<property name="messageConverters">
+		<list>
+			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+		</list>
+		</property>
+	</bean>
+
 </beans>

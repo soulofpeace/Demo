@@ -1,10 +1,12 @@
 package com.appspot.demo.server.paypal.dao;
 
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,13 +39,14 @@ public class PaypalCustomerDaoImpl implements PaypalCustomerDao {
 	}
 
 	@Override
-	public void savePaypalCustomer(PaypalCustomer paypalCustomer) {
+	public String savePaypalCustomer(PaypalCustomer paypalCustomer) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
-			pm.makePersistent(paypalCustomer);
+			paypalCustomer =pm.makePersistent(paypalCustomer);
 			pm.currentTransaction().commit();
+			return KeyFactory.keyToString(paypalCustomer.getId());
 		}
 		finally{
 			if(pm.currentTransaction().isActive()){
@@ -51,6 +54,34 @@ public class PaypalCustomerDaoImpl implements PaypalCustomerDao {
 			}
 			pm.close();
 		}
+	}
+
+	@Override
+	public PaypalCustomer getPaypalCustomerByPaypalId(String paypalId) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(PaypalCustomer.class);
+			query.setFilter("payerId == payerIdParam");
+			query.declareParameters("String payerIdParam");
+			List<PaypalCustomer> customers =(List<PaypalCustomer>) query.execute(paypalId);
+			pm.currentTransaction().commit();
+			if (customers.isEmpty()){
+				return null;
+			}
+			else{
+				return pm.detachCopy(customers.get(0));
+			}
+			
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+		
 	}
 
 }

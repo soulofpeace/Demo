@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
-import com.appspot.demo.server.paypal.model.ProductPackage;
+import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -39,7 +39,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 	}
 
 	@Override
-	public void saveInvoice(PaypalCustomer customer, ProductPackage productPackage, Invoice invoice) {
+	public String saveInvoice(PaypalCustomer customer, RecurringProductPackage productPackage, Invoice invoice) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try{
@@ -50,6 +50,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			pm.makePersistent(customer);
 			productPackage.getInvoiceKeys().add(invoice.getId());
 			pm.makePersistent(productPackage);
+			return KeyFactory.keyToString(invoice.getId());
 		}
 		finally{
 			pm.close();

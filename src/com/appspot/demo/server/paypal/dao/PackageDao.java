@@ -1,10 +1,13 @@
 package com.appspot.demo.server.paypal.dao;
 
-import com.appspot.demo.server.paypal.model.ProductPackage;
+import java.util.List;
+
+import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 
 
 
 public interface PackageDao {
-	public Package getPackageById(String id);
-	public void savePackage(ProductPackage productPackage);
+	public RecurringProductPackage getPackageById(String id);
+	public String savePackage(RecurringProductPackage productPackage);
+	public List<RecurringProductPackage> getAllPackages();
 }

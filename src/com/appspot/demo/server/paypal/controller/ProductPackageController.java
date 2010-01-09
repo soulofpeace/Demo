@@ -1,27 +1,25 @@
 package com.appspot.demo.server.paypal.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.appspot.demo.client.paypal.dto.ProductPackageDto;
 import com.appspot.demo.server.paypal.dao.PackageDao;
 
-import com.appspot.demo.server.paypal.model.ProductPackage;
+import com.appspot.demo.server.paypal.model.RecurringProductPackage;
+import com.google.appengine.api.datastore.KeyFactory;
 
 
 @Controller
@@ -32,10 +30,29 @@ public class ProductPackageController {
 	private PackageDao packageDao;
 	
 	
+	@RequestMapping(value="/get", method=RequestMethod.GET)
+	public ArrayList<ProductPackageDto> getPackages(){
+		List<RecurringProductPackage> productPackages = this.packageDao.getAllPackages();
+		ArrayList<ProductPackageDto> results = new ArrayList<ProductPackageDto>();
+		if(productPackages.iterator().hasNext()){
+			for(RecurringProductPackage productPackage: productPackages){
+				results.add(this.convertPackageToDto(productPackage));
+			}
+		}
+		return results;
+		
+	}
+	
+	@RequestMapping(value="/get/{packageKey}", method=RequestMethod.GET)
+	public ProductPackageDto getPackageById(@PathVariable String packageKey){
+		RecurringProductPackage productPackage = this.packageDao.getPackageById(packageKey);
+		return this.convertPackageToDto(productPackage);
+	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String addPackage(@RequestParam("packageImageURL")String packageImageURL, @RequestParam("packageName")String packageName, @RequestParam("packageDescription")String packageDescription, @RequestParam("packageCost")double packageCost, @RequestParam("billingPeriod")String billingPeriod, @RequestParam("billingFrequency")int billingFrequency, HttpServletResponse response){
+	public String addPackage(@RequestParam("packageImageURL")String packageImageURL, @RequestParam("packageName")String packageName, @RequestParam("packageDescription")String packageDescription, @RequestParam("packageCost")double packageCost, @RequestParam("billingPeriod")String billingPeriod, @RequestParam("billingFrequency")int billingFrequency, HttpServletResponse response, HttpServletRequest request){
 		logger.info("Adding package");
-		ProductPackage productPackage = new ProductPackage();
+		RecurringProductPackage productPackage = new RecurringProductPackage();
 		productPackage.setPackageImageURL(packageImageURL);
 		productPackage.setPackageName(packageName);
 		productPackage.setPackageDescription(packageDescription);
@@ -90,7 +107,7 @@ public class ProductPackageController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		**/
+		
 		String signature="AyAQA1q4x3jihgYNo.MlslDeJ.h3AKyuoMd142QcPSPklX6uVwULY.87";
 		String password="1256008736";
 		
@@ -122,9 +139,34 @@ public class ProductPackageController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			String paypalToken = this.paypalService.setExpressCheckOut(productPackage);
+			session.setAttribute("paypalToken", paypalToken);
+			logger.info("Session paypalToken is "+session.getAttribute("paypalToken"));
+			PaypalCustomer customer = this.paypalService.getExpressCheckoutDetails((String) session.getAttribute("paypalToken"));
+			logger.info("Customer email is"+customer.getPayerEmail());
+		} catch (PaypalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		**/
 		return null;
 	}
 	
+	
+	private ProductPackageDto convertPackageToDto(RecurringProductPackage productPackage){
+		ProductPackageDto result = new ProductPackageDto();
+		result.setKey(KeyFactory.keyToString(productPackage.getId()));
+		result.setBillingFrequency(String.valueOf(productPackage.getBillingFrequency()));
+		result.setBillingPeriod(productPackage.getBillingPeriod());
+		result.setPackageCost(String.valueOf(productPackage.getPackageCost()));
+		result.setPackageDescription(productPackage.getPackageDescription());
+		result.setPackageImageURL(productPackage.getPackageImageURL());
+		result.setPackageName(productPackage.getPackageName());
+		return result;
+	}
+	
+	/**
 	private String getURLResponse(String urlString){
 		try {
 			URL url = new URL(urlString);
@@ -147,5 +189,6 @@ public class ProductPackageController {
         }
 		
 	}
+	**/
 	
 }

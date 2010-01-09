@@ -5,5 +5,6 @@ import com.google.appengine.api.datastore.Key;
 
 public interface PaypalCustomerDao {
 	public PaypalCustomer getPaypalCustomerById(String id);
-	public void savePaypalCustomer(PaypalCustomer paypalCustomer);
+	public String savePaypalCustomer(PaypalCustomer paypalCustomer);
+	public PaypalCustomer getPaypalCustomerByPaypalId(String paypalId);
 }

@@ -1,14 +1,16 @@
 package com.appspot.demo.server.paypal.dao;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.appspot.demo.server.paypal.model.ProductPackage;
+import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -21,13 +23,13 @@ public class PackageDaoImpl implements PackageDao {
 	private PersistenceManagerFactory pmf;
 	
 	@Override
-	public Package getPackageById(String id) {
+	public RecurringProductPackage getPackageById(String id) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try{
 			Key idKey = KeyFactory.stringToKey(id);
-			Package packageName = pm.getObjectById(Package.class, idKey);
-			return pm.detachCopy(packageName);
+			RecurringProductPackage productPackage = pm.getObjectById(RecurringProductPackage.class, idKey);
+			return pm.detachCopy(productPackage);
 		}
 		finally{
 			pm.close();
@@ -36,13 +38,14 @@ public class PackageDaoImpl implements PackageDao {
 	}
 
 	@Override
-	public void savePackage(ProductPackage productPackage) {
+	public String savePackage(RecurringProductPackage productPackage) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
-			pm.makePersistent(productPackage);
+			productPackage = pm.makePersistent(productPackage);
 			pm.currentTransaction().commit();
+			return KeyFactory.keyToString(productPackage.getId());
 		}finally{
 			if (pm.currentTransaction().isActive()) {
 		        pm.currentTransaction().rollback();
@@ -50,6 +53,26 @@ public class PackageDaoImpl implements PackageDao {
 			pm.close();
 		}
 
+	}
+	
+	public List<RecurringProductPackage> getAllPackages(){
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(RecurringProductPackage.class);
+			List<RecurringProductPackage> productPackages = (List<RecurringProductPackage>)query.execute();
+			pm.currentTransaction().commit();
+			return (List<RecurringProductPackage>)pm.detachCopyAll(productPackages);
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			
+			pm.close();
+		}
+		
+		
 	}
 
 }

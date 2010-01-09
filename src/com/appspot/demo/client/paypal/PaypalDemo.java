@@ -1,8 +1,19 @@
 package com.appspot.demo.client.paypal;
 
+import com.appspot.demo.client.paypal.dto.js.ProductPackageJS;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -13,7 +24,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PaypalDemo implements EntryPoint {
 	
 	private VerticalPanel contentPanel = new VerticalPanel();
-	private FormPanel formPanel = new FormPanel();
 	private FlexTable packageTable = new FlexTable();
 
 	@Override
@@ -24,36 +34,107 @@ public class PaypalDemo implements EntryPoint {
 
 	}
 	
+	
 	private void setupContentPanel(){
-		this.setupFormPanel();
-		this.contentPanel.add(this.formPanel);
+		//this.setupFormPanel();
+		this.setupPackageTable();
+		this.contentPanel.add(packageTable);
+		Anchor addNewPackageLink = new Anchor("Add New Package", "addPackage.html");
+		this.contentPanel.add(addNewPackageLink);
 	}
 	
+	/**
 	private void setupFormPanel(){
 		this.formPanel.setMethod(FormPanel.METHOD_POST);
+		this.formPanel.setAction("/demo/paypal/payment/start");
+		this.formPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
 		this.setupPackageTable();
 		this.formPanel.setWidget(packageTable);
 	}
+	**/
 	
 	private void setupPackageTable(){
 		this.packageTable.setText(0, 0, "Package Logo");
 		this.packageTable.setText(0, 1, "Package Name");
 		this.packageTable.setText(0, 2, "Package Description");
 		this.packageTable.setText(0, 3, "Package Cost");
-		this.packageTable.setText(0, 4, "Action");
+		this.packageTable.setText(0, 4, "Billing Period");
+		this.packageTable.setText(0, 5, "Billing Frequency");
+		this.packageTable.setText(0, 6, "Action");
 		this.packageTable.getRowFormatter().addStyleName(0, "packageHeader");
 		this.packageTable.addStyleName("packageList");
-		Image packageImage = new Image();
-		packageImage.setUrl("http://www.socialwok.com/themes/socialwok/images/logo.png");
-		Label packageLabel = new Label("Package1");
-		Label packageDescription = new Label("Package1 is for something");
-		Label packageCost = new Label("$5 Per month");
-		SubmitButton getIt = new SubmitButton("Get It!");
-		this.packageTable.setWidget(1, 0, packageImage);
-		this.packageTable.setWidget(1, 1, packageLabel);
-		this.packageTable.setWidget(1, 2, packageDescription);
-		this.packageTable.setWidget(1, 3, packageCost);
-		this.packageTable.setWidget(1, 4, getIt);
+		
+		String url="http://choonkeedemo.appspot.com/demo/paypal/productpackage/get.json";
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder.setHeader("Content-Type", "application/json");
+		try{
+			Request request= requestBuilder.sendRequest(null, new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					// TODO Auto-generated method stub
+					if(200==response.getStatusCode()){
+						String json = response.getText();
+						JsArray<ProductPackageJS> packages= getPackagesFromJson(json);
+						for (int i=0; i< packages.length(); i++){
+							Image packageImage = new Image();
+							packageImage.setUrl(packages.get(i).getPackageImageURL());
+							Label packageLabel = new Label(packages.get(i).getPackageName());
+							Label packageDescription = new Label(packages.get(i).getPackageDescription());
+							Label packageCost = new Label(packages.get(i).getPackageCost());
+							Label billingPeriod = new Label(packages.get(i).getBillingPeriod());
+							Label billingFrequency = new Label(packages.get(i).getBillingFrequency());
+							HorizontalPanel formContainer = new HorizontalPanel();
+							
+							final FormPanel formPanel = new FormPanel();
+							formPanel.setMethod(FormPanel.METHOD_POST);
+							formPanel.setAction("/demo/paypal/payment/start");
+							formPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
+							Hidden packagekey = new Hidden("packageKey", packages.get(i).getKey());
+							SubmitButton getIt = new SubmitButton("Get It!");
+							getIt.addClickHandler(new ClickHandler() {
+								
+								@Override
+								public void onClick(ClickEvent event) {
+									// TODO Auto-generated method stub
+									formPanel.submit();
+								}
+							});
+							formContainer.add(getIt);
+							formContainer.add(packagekey);
+							formPanel.setWidget(formContainer);
+							packageTable.setWidget(i+1, 0, packageImage);
+							packageTable.setWidget(i+1, 1, packageLabel);
+							packageTable.setWidget(i+1, 2, packageDescription);
+							packageTable.setWidget(i+1, 3, packageCost);
+							packageTable.setWidget(i+1, 4, billingPeriod);
+							packageTable.setWidget(i+1, 5, billingFrequency);
+							packageTable.setWidget(i+1, 6, formPanel);
+							
+							
+						}
+						
+					}
+					
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+			
+		}
+		catch(RequestException ex){
+			
+		}
+		
 	}
+	
+	private final native JsArray<ProductPackageJS> getPackagesFromJson(String json)/*-{
+		return eval('('+json+')').productPackageDtoList;
+	}-*/;
 
 }
