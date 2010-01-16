@@ -10,6 +10,8 @@ public class ProductPackageDto {
 	
 	private String packageDescription;
 	
+	private String moreInformation;
+	
 	private String packageCost;
 	
 	private String billingPeriod;
@@ -70,6 +72,14 @@ public class ProductPackageDto {
 
 	public String getBillingFrequency() {
 		return billingFrequency;
+	}
+
+	public void setMoreInformation(String moreInformation) {
+		this.moreInformation = moreInformation;
+	}
+
+	public String getMoreInformation() {
+		return moreInformation;
 	}
 	
 }

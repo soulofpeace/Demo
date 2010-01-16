@@ -25,6 +25,9 @@ public class RecurringProductPackage {
 	@Persistent
 	private String packageName;
 	
+	@Persistent 
+	private String moreInformation;
+	
 	@Persistent
 	private String packageDescription;
 	
@@ -103,6 +106,14 @@ public class RecurringProductPackage {
 
 	public int getBillingFrequency() {
 		return billingFrequency;
+	}
+
+	public void setMoreInformation(String moreInformation) {
+		this.moreInformation = moreInformation;
+	}
+
+	public String getMoreInformation() {
+		return moreInformation;
 	}
 
 	

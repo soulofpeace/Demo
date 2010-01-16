@@ -25,6 +25,10 @@ public class ProductPackageJS extends JavaScriptObject{
 		return this.packageDescription;
 	}-*/;
 	
+	public final native String getMoreInformation()/*-{
+		return this.moreInformation;
+	}-*/;
+	
 	public final native String getPackageCost()/*-{
 		return this.packageCost;
 	}-*/;

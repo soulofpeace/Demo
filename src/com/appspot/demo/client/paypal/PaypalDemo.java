@@ -57,10 +57,11 @@ public class PaypalDemo implements EntryPoint {
 		this.packageTable.setText(0, 0, "Package Logo");
 		this.packageTable.setText(0, 1, "Package Name");
 		this.packageTable.setText(0, 2, "Package Description");
-		this.packageTable.setText(0, 3, "Package Cost");
-		this.packageTable.setText(0, 4, "Billing Period");
-		this.packageTable.setText(0, 5, "Billing Frequency");
-		this.packageTable.setText(0, 6, "Action");
+		this.packageTable.setText(0, 3, "More Information");
+		this.packageTable.setText(0, 4, "Package Cost (US Dollar)");
+		this.packageTable.setText(0, 5, "Billing Period");
+		this.packageTable.setText(0, 6, "Billing Frequency");
+		this.packageTable.setText(0, 7, "Action");
 		this.packageTable.getRowFormatter().addStyleName(0, "packageHeader");
 		this.packageTable.addStyleName("packageList");
 		
@@ -81,6 +82,7 @@ public class PaypalDemo implements EntryPoint {
 							packageImage.setUrl(packages.get(i).getPackageImageURL());
 							Label packageLabel = new Label(packages.get(i).getPackageName());
 							Label packageDescription = new Label(packages.get(i).getPackageDescription());
+							Label moreInformation = new Label(packages.get(i).getMoreInformation());
 							Label packageCost = new Label(packages.get(i).getPackageCost());
 							Label billingPeriod = new Label(packages.get(i).getBillingPeriod());
 							Label billingFrequency = new Label(packages.get(i).getBillingFrequency());
@@ -106,10 +108,11 @@ public class PaypalDemo implements EntryPoint {
 							packageTable.setWidget(i+1, 0, packageImage);
 							packageTable.setWidget(i+1, 1, packageLabel);
 							packageTable.setWidget(i+1, 2, packageDescription);
-							packageTable.setWidget(i+1, 3, packageCost);
-							packageTable.setWidget(i+1, 4, billingPeriod);
-							packageTable.setWidget(i+1, 5, billingFrequency);
-							packageTable.setWidget(i+1, 6, formPanel);
+							packageTable.setWidget(i+1, 3, moreInformation);
+							packageTable.setWidget(i+1, 4, packageCost);
+							packageTable.setWidget(i+1, 5, billingPeriod);
+							packageTable.setWidget(i+1, 6, billingFrequency);
+							packageTable.setWidget(i+1, 7, formPanel);
 							
 							
 						}

@@ -49,6 +49,9 @@ public class PaypalService {
 		encoder.add("METHOD", "SetExpressCheckout");
 		encoder.add("RETURNURL", returnURL);
 		encoder.add("CANCELURL", cancelURL);
+		encoder.add("NOSHIPPING", "1");
+		encoder.add("LANDINGPAGE", "Billing");
+		encoder.add("HDRIMG", "https://sites.google.com/a/socialwok.com/emailmkting/socialwoklogo_small_email.jpg");
 		encoder.add("AMT", "0");
 		encoder.add("L_BILLINGTYPE0", "RecurringPayments");
 		logger.info("Package Description is "+ productPackage.getPackageDescription());

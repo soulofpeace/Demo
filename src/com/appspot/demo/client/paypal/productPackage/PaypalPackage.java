@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -36,6 +37,13 @@ public class PaypalPackage implements EntryPoint {
 		packageDescriptionInput.setName("packageDescription");
 		containerPanel.add(packageDescriptionLabel);
 		containerPanel.add(packageDescriptionInput);
+		
+		Label moreInformationLabel = new Label("More Information");
+		final TextArea moreInformationInput = new TextArea();
+		moreInformationInput.setName("moreInformation");
+		containerPanel.add(moreInformationLabel);
+		containerPanel.add(moreInformationInput);
+		
 		
 		Label packageImageURLLabel = new Label("Package Image URL");
 		final TextBox packageImageURLInput = new TextBox();

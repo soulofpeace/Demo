@@ -50,12 +50,13 @@ public class ProductPackageController {
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String addPackage(@RequestParam("packageImageURL")String packageImageURL, @RequestParam("packageName")String packageName, @RequestParam("packageDescription")String packageDescription, @RequestParam("packageCost")double packageCost, @RequestParam("billingPeriod")String billingPeriod, @RequestParam("billingFrequency")int billingFrequency, HttpServletResponse response, HttpServletRequest request){
+	public String addPackage(@RequestParam("packageImageURL")String packageImageURL, @RequestParam("packageName")String packageName, @RequestParam("packageDescription")String packageDescription, @RequestParam("moreInformation")String moreInformation, @RequestParam("packageCost")double packageCost, @RequestParam("billingPeriod")String billingPeriod, @RequestParam("billingFrequency")int billingFrequency, HttpServletResponse response, HttpServletRequest request){
 		logger.info("Adding package");
 		RecurringProductPackage productPackage = new RecurringProductPackage();
 		productPackage.setPackageImageURL(packageImageURL);
 		productPackage.setPackageName(packageName);
 		productPackage.setPackageDescription(packageDescription);
+		productPackage.setMoreInformation(moreInformation);
 		productPackage.setPackageCost(packageCost);
 		productPackage.setBillingFrequency(billingFrequency);
 		productPackage.setBillingPeriod(billingPeriod);
@@ -161,6 +162,7 @@ public class ProductPackageController {
 		result.setBillingPeriod(productPackage.getBillingPeriod());
 		result.setPackageCost(String.valueOf(productPackage.getPackageCost()));
 		result.setPackageDescription(productPackage.getPackageDescription());
+		result.setMoreInformation(productPackage.getMoreInformation());
 		result.setPackageImageURL(productPackage.getPackageImageURL());
 		result.setPackageName(productPackage.getPackageName());
 		return result;
