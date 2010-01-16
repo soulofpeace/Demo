@@ -29,6 +29,10 @@ public class ProductPackageController {
 	@Autowired
 	private PackageDao packageDao;
 	
+	@RequestMapping(value="/view", method=RequestMethod.GET)
+	public String viewAll(){
+		return "Paypal";
+	}
 	
 	@RequestMapping(value="/get", method=RequestMethod.GET)
 	public ArrayList<ProductPackageDto> getPackages(){

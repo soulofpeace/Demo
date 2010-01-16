@@ -9,7 +9,7 @@ import com.appspot.demo.server.paypal.service.MailerService;
 public class MailerServiceConfig {
 	@Bean
 	public MailerService mailerService(){
-		String fromEmail ="choonkeeoh@gmail.com";
+		String fromEmail ="soulofpeace@gmail.com";
 		return new MailerService(fromEmail);
 	}
 }

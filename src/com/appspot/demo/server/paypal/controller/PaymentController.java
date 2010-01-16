@@ -140,8 +140,9 @@ public class PaymentController {
 	
 	
 	private void sendConfirmationEmail(RecurringProductPackage productPackage){
-		String userEmail = this.userInfoService.getCurrentUserEmail();
-		String userName = this.userInfoService.getName();
+		String userEmail ="soulofpeace@gmail.com";
+		//String userName = this.userInfoService.getName();
+		String userName = "Choon Kee";
 		String subject = "Successful Purchase of Package "+productPackage.getPackageName();
 		String greetings="Hi "+userName+",\n";
 		String body = "You have successfully purchase "+productPackage.getPackageName()+"\n";
