@@ -1,5 +1,5 @@
-function confirmPackage(){
-  var $intern_0 = '', $intern_29 = '" for "gwt:onLoadErrorFn"', $intern_27 = '" for "gwt:onPropertyErrorFn"', $intern_12 = '"><\/script>', $intern_14 = '#', $intern_53 = '.cache.html', $intern_16 = '/', $intern_47 = '19679837268BFB257EB0D7982D16A879', $intern_48 = '469B29F6535D52401A3BFC0EFA1A13CD', $intern_49 = '8A77FE263E1BE47A302DB57DAF75831D', $intern_55 = '<script defer="defer">confirmPackage.onInjectionDone(\'confirmPackage\')<\/script>', $intern_11 = '<script id="', $intern_24 = '=', $intern_15 = '?', $intern_50 = 'B41A11F7E38D4A739B6C4BCB3F0CEE72', $intern_26 = 'Bad handler "', $intern_51 = 'C5D88ED9CC916895FA729DEC7810A167', $intern_52 = 'D0C4772A7D6A88D11BBA32281E0D9285', $intern_54 = 'DOMContentLoaded', $intern_13 = 'SCRIPT', $intern_10 = '__gwt_marker_confirmPackage', $intern_17 = 'base', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_19 = 'clear.cache.gif', $intern_1 = 'confirmPackage', $intern_23 = 'content', $intern_9 = 'end', $intern_41 = 'gecko', $intern_42 = 'gecko1_8', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_28 = 'gwt:onLoadErrorFn', $intern_25 = 'gwt:onPropertyErrorFn', $intern_22 = 'gwt:property', $intern_45 = 'hosted.html?confirmPackage', $intern_40 = 'ie6', $intern_39 = 'ie8', $intern_30 = 'iframe', $intern_18 = 'img', $intern_31 = "javascript:''", $intern_44 = 'loadExternalRefs', $intern_20 = 'meta', $intern_33 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_38 = 'msie', $intern_21 = 'name', $intern_35 = 'opera', $intern_32 = 'position:absolute;width:0;height:0;border:none', $intern_37 = 'safari', $intern_46 = 'selectingPermutation', $intern_2 = 'startup', $intern_43 = 'unknown', $intern_34 = 'user.agent', $intern_36 = 'webkit';
+function viewPackage(){
+  var $intern_0 = '', $intern_29 = '" for "gwt:onLoadErrorFn"', $intern_27 = '" for "gwt:onPropertyErrorFn"', $intern_12 = '"><\/script>', $intern_14 = '#', $intern_53 = '.cache.html', $intern_16 = '/', $intern_47 = '0B69AA6EF3E77B4E1C611417027427C8', $intern_48 = '1921521B0831BD91BA0EFDAC8B2D918F', $intern_49 = '1F20CFDCD0CE7711A8111E0BD9691B1F', $intern_50 = '5485CF0E0B3952572341E9E21B452143', $intern_51 = '9EB14092609BDC27D4ABE9CB869179FF', $intern_52 = '9F45ACBE3118ED78E3024A1DB59EB795', $intern_55 = '<script defer="defer">viewPackage.onInjectionDone(\'viewPackage\')<\/script>', $intern_11 = '<script id="', $intern_24 = '=', $intern_15 = '?', $intern_26 = 'Bad handler "', $intern_54 = 'DOMContentLoaded', $intern_13 = 'SCRIPT', $intern_10 = '__gwt_marker_viewPackage', $intern_17 = 'base', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_19 = 'clear.cache.gif', $intern_23 = 'content', $intern_9 = 'end', $intern_41 = 'gecko', $intern_42 = 'gecko1_8', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_28 = 'gwt:onLoadErrorFn', $intern_25 = 'gwt:onPropertyErrorFn', $intern_22 = 'gwt:property', $intern_45 = 'hosted.html?viewPackage', $intern_40 = 'ie6', $intern_39 = 'ie8', $intern_30 = 'iframe', $intern_18 = 'img', $intern_31 = "javascript:''", $intern_44 = 'loadExternalRefs', $intern_20 = 'meta', $intern_33 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_38 = 'msie', $intern_21 = 'name', $intern_35 = 'opera', $intern_32 = 'position:absolute;width:0;height:0;border:none', $intern_37 = 'safari', $intern_46 = 'selectingPermutation', $intern_2 = 'startup', $intern_43 = 'unknown', $intern_34 = 'user.agent', $intern_1 = 'viewPackage', $intern_36 = 'webkit';
   var $wnd = window, $doc = document, $stats = $wnd.__gwtStatsEvent?function(a){
     return $wnd.__gwtStatsEvent(a);
   }
@@ -36,7 +36,7 @@ function confirmPackage(){
         }
         ;
       }
-      confirmPackage = null;
+      viewPackage = null;
       frameWnd.gwtOnLoad(onLoadErrorFunc, $intern_1, base);
       $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_8, millis:(new Date).getTime(), type:$intern_9});
     }
@@ -210,14 +210,14 @@ function confirmPackage(){
   }
   ;
   values[$intern_34] = {gecko:0, gecko1_8:1, ie6:2, ie8:3, opera:4, safari:5};
-  confirmPackage.onScriptLoad = function(){
+  viewPackage.onScriptLoad = function(){
     if (frameInjected) {
       loadDone = true;
       maybeStartModule();
     }
   }
   ;
-  confirmPackage.onInjectionDone = function(){
+  viewPackage.onInjectionDone = function(){
     scriptsDone = true;
     $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_44, millis:(new Date).getTime(), type:$intern_9});
     maybeStartModule();
@@ -238,12 +238,12 @@ function confirmPackage(){
   $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_3, millis:(new Date).getTime(), type:$intern_46});
   if (!isHostedMode()) {
     try {
-      unflattenKeylistIntoAnswers([$intern_39], $intern_47);
-      unflattenKeylistIntoAnswers([$intern_42], $intern_48);
-      unflattenKeylistIntoAnswers([$intern_37], $intern_49);
-      unflattenKeylistIntoAnswers([$intern_41], $intern_50);
-      unflattenKeylistIntoAnswers([$intern_35], $intern_51);
-      unflattenKeylistIntoAnswers([$intern_40], $intern_52);
+      unflattenKeylistIntoAnswers([$intern_42], $intern_47);
+      unflattenKeylistIntoAnswers([$intern_37], $intern_48);
+      unflattenKeylistIntoAnswers([$intern_40], $intern_49);
+      unflattenKeylistIntoAnswers([$intern_39], $intern_50);
+      unflattenKeylistIntoAnswers([$intern_41], $intern_51);
+      unflattenKeylistIntoAnswers([$intern_35], $intern_52);
       strongName = answers[computePropValue($intern_34)];
       initialHtml = strongName + $intern_53;
     }
@@ -284,4 +284,4 @@ function confirmPackage(){
   $doc.write($intern_55);
 }
 
-confirmPackage();
+viewPackage();

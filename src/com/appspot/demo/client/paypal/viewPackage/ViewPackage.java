@@ -1,54 +1,30 @@
-package com.appspot.demo.client.paypal.confirmPackage;
+package com.appspot.demo.client.paypal.viewPackage;
 
 import com.appspot.demo.client.paypal.dto.js.ProductPackageJS;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
-
-public class ConfirmPackage implements EntryPoint {
+public class ViewPackage implements EntryPoint {
 	private ProductPackageJS productPackage;
 	private FlexTable displayTable = new FlexTable();
-
+	
 	@Override
 	public void onModuleLoad() {
 		// TODO Auto-generated method stub
-		String packageKey = Window.Location.getParameter("packageKey");
+		String packageKey = this.getById("packageKey");
 		this.getProductPackage(packageKey);
 		RootPanel.get().add(displayTable);
-		
-		final FormPanel formPanel = new FormPanel("_self");
-		formPanel.setMethod(FormPanel.METHOD_GET);
-		formPanel.setAction("/demo/paypal/payment/confirm");
-		formPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
-		Button confirmButton = new Button("Confirm");
-		formPanel.setWidget(confirmButton);
-		confirmButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
-				formPanel.submit();
-			}
-		});
-		
-		RootPanel.get().add(formPanel);
-		
-		
 	}
-	
+
 	private void getProductPackage(String packageKey){
 		String requestURL="http://choonkeedemo.appspot.com/demo/paypal/productpackage/get/"+packageKey+".json";
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, requestURL);
@@ -118,5 +94,12 @@ public class ConfirmPackage implements EntryPoint {
 		this.displayTable.setWidget(7, 1, billingFrequency);
 		
 	}
+	
+	private native String getById(String id) /*-{
+ 		var element = $doc.getElementById(id);
+ 		if (element == null)
+     		return "";
+ 		return $doc.getElementById(id).value;
+	}-*/;
 
 }

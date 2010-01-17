@@ -39,7 +39,7 @@ public class PaypalDemo implements EntryPoint {
 		//this.setupFormPanel();
 		this.setupPackageTable();
 		this.contentPanel.add(packageTable);
-		Anchor addNewPackageLink = new Anchor("Add New Package", "addPackage.html");
+		Anchor addNewPackageLink = new Anchor("Add New Package", "new");
 		this.contentPanel.add(addNewPackageLink);
 	}
 	

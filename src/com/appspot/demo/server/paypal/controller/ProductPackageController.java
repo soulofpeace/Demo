@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +35,13 @@ public class ProductPackageController {
 		return "Paypal";
 	}
 	
+	@RequestMapping(value="/view/{packageKey}",method=RequestMethod.GET)
+	public String viewPackage(@PathVariable String packageKey, Model model){
+		model.addAttribute("packageKey", packageKey);
+		return "viewPackage";
+		
+	}
+	
 	@RequestMapping(value="/get", method=RequestMethod.GET)
 	public ArrayList<ProductPackageDto> getPackages(){
 		List<RecurringProductPackage> productPackages = this.packageDao.getAllPackages();
@@ -51,6 +59,11 @@ public class ProductPackageController {
 	public ProductPackageDto getPackageById(@PathVariable String packageKey){
 		RecurringProductPackage productPackage = this.packageDao.getPackageById(packageKey);
 		return this.convertPackageToDto(productPackage);
+	}
+	
+	@RequestMapping(value="/new", method=RequestMethod.GET)
+	public String createNewPackage(){
+		return "addPackage";
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)

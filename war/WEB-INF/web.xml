@@ -11,11 +11,7 @@
    
    <filter-mapping>
    		<filter-name>PaypalAuthFilter</filter-name>
-   		<url-pattern>/demo/paypal/</url-pattern>
-   		<dispatcher>REQUEST</dispatcher>  
-		<dispatcher>INCLUDE</dispatcher>  
-		<dispatcher>FORWARD</dispatcher>  
-		<dispatcher>ERROR</dispatcher>  
+   		<url-pattern>/demo/paypal/*</url-pattern>
    </filter-mapping>
    <servlet>
    		<servlet-name>DemoDispatcher</servlet-name>
