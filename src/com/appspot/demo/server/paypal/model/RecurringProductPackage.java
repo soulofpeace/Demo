@@ -1,6 +1,7 @@
 package com.appspot.demo.server.paypal.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.annotations.Element;
@@ -42,6 +43,9 @@ public class RecurringProductPackage {
 	
 	@Persistent
 	private List<Key> invoiceKeys = new ArrayList<Key>();
+	
+	@Persistent
+	private Date getDateCreated;
 	
 
 	public void setId(Key id) {
@@ -114,6 +118,14 @@ public class RecurringProductPackage {
 
 	public String getMoreInformation() {
 		return moreInformation;
+	}
+
+	public void setGetDateCreated(Date getDateCreated) {
+		this.getDateCreated = getDateCreated;
+	}
+
+	public Date getGetDateCreated() {
+		return getDateCreated;
 	}
 
 	

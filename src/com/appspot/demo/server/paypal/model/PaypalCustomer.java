@@ -1,6 +1,7 @@
 package com.appspot.demo.server.paypal.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.annotations.Element;
@@ -74,6 +75,9 @@ public class PaypalCustomer {
 	
 	@Persistent
 	private List<Key> invoiceKeys = new ArrayList<Key>();
+	
+	@Persistent
+	private Date dateCreated;
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -233,6 +237,14 @@ public class PaypalCustomer {
 
 	public Key getId() {
 		return id;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
 }

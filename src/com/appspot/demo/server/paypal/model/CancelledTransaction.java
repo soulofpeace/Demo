@@ -11,16 +11,17 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType =  IdentityType.APPLICATION, detachable = "true")
-public class PaypalApplicationUser {
+public class CancelledTransaction {
+	
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
 	private Key id;
 	
 	@Persistent
-	private String email;
+	private Key paypalApplicationUser;
 	
 	@Persistent
-	private String userName;
+	private String comment;
 	
 	@Persistent
 	private Date dateCreated;
@@ -30,23 +31,23 @@ public class PaypalApplicationUser {
 	}
 
 	public Key getId() {
-		return id;
+		return this.id;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setPaypalApplicationUser(Key paypalApplicationUser) {
+		this.paypalApplicationUser = paypalApplicationUser;
 	}
 
-	public String getEmail() {
-		return email;
+	public Key getPaypalApplicationUser() {
+		return paypalApplicationUser;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getComment() {
+		return comment;
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -56,7 +57,5 @@ public class PaypalApplicationUser {
 	public Date getDateCreated() {
 		return dateCreated;
 	}
-	
-	
 
 }
