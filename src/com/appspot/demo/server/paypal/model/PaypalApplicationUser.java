@@ -24,6 +24,9 @@ public class PaypalApplicationUser {
 	
 	@Persistent
 	private Date dateCreated;
+	
+	@Persistent
+	private Role role;
 
 	public void setId(Key id) {
 		this.id = id;
@@ -55,6 +58,14 @@ public class PaypalApplicationUser {
 
 	public Date getDateCreated() {
 		return dateCreated;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Role getRole() {
+		return role;
 	}
 	
 	

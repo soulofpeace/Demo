@@ -6,11 +6,13 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.appspot.demo.server.paypal.model.CancelledTransaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+@Repository
 public class CancelledTransactionDaoImpl implements CancelledTransactionDao{
 	
 	public static final Logger logger = Logger.getLogger(CancelledTransactionDaoImpl.class.getName());

@@ -8,11 +8,13 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+@Repository
 public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 	
 	private static final Logger logger = Logger.getLogger(PaypalApplicationUserDaoImpl.class.getName());

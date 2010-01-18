@@ -2,6 +2,7 @@ package com.appspot.demo.server.paypal.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.appspot.demo.server.paypal.dao.CancelledTransactionDao;
 import com.appspot.demo.server.paypal.dao.InvoiceDao;
 import com.appspot.demo.server.paypal.dao.PackageDao;
+import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
 import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 
+import com.appspot.demo.server.paypal.model.CancelledTransaction;
 import com.appspot.demo.server.paypal.model.Invoice;
+import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.appspot.demo.server.paypal.service.MailerService;
@@ -50,15 +55,33 @@ public class PaymentController {
 	@Autowired
 	private UserInfoService userInfoService;
 	
+	@Autowired
+	private PaypalApplicationUserDao appUserDao;
+	
+	@Autowired
+	private CancelledTransactionDao cancelledTransactionDao;
+	
 	private static final String createURL="http://choonkeedemo.appspot.com/demo/paypal/payment/create";
 	
 	private static final String cancelURL="http://choonkeedemo.appspot.com/demo/paypal/payment/cancel";
 	
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.GET)
-	public String cancelPaymentAgreement(){
-		return null;
+	public String cancelPaymentAgreement(@RequestParam("comment")String comment){
 		
+		return "cancelPayment";
+	}
+	
+	@RequestMapping(value="/recordCancelledTransaction", method=RequestMethod.POST)
+	public String recordCancelledTransaction(@RequestParam("comment")String comment){
+		String email = this.userInfoService.getCurrentUserEmail();
+		PaypalApplicationUser appUser = this.appUserDao.getApplicationUserByEmail(email);
+		CancelledTransaction cancelledTransaction = new CancelledTransaction();
+		cancelledTransaction.setComment(comment);
+		cancelledTransaction.setDateCreated(new Date());
+		cancelledTransaction.setPaypalApplicationUser(appUser.getId());
+		this.cancelledTransactionDao.saveCancelledTransaction(cancelledTransaction);
+		return "redirect:http://choonkeedemo.appspot.com/demo/paypal/productpackage/view";
 	}
 	
 	@RequestMapping(value="/start", method=RequestMethod.POST)
