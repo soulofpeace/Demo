@@ -14,6 +14,7 @@ public class PaypalSuccess implements EntryPoint {
 		String success = Window.Location.getParameter("success");
 		if (success.equalsIgnoreCase("true")){
 			Label label=new Label("Package Successfully purchased");
+			Label emailMessage = new Label("Email Receipt Confirmation for transaction Id sent to");
 			RootPanel.get().add(label);
 		}
 		else{
