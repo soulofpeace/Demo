@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,6 +29,7 @@ public class PaypalApplicationUserController {
 	
 	@RequestMapping(value="/get", method=RequestMethod.GET)
 	public String getCurrentPaypalApplicationUser(Model model){
+		logger.info("returning current app user");
 		String email = this.userInfoService.getCurrentUserEmail();
 		PaypalApplicationUser applicationUser = this.paypalApplicationUserDao.getApplicationUserByEmail(email);
 		PaypalApplicationUserDto applicationUserDto = new PaypalApplicationUserDto();
@@ -35,6 +37,7 @@ public class PaypalApplicationUserController {
 		applicationUserDto.setEmail(applicationUser.getEmail());
 		applicationUserDto.setRole(applicationUser.getRole().toString());
 		applicationUserDto.setUserName(applicationUser.getUserName());
+		logger.info("Current User Email: "+applicationUserDto.getEmail());
 		model.addAttribute("paypalApplicationUserDto", applicationUserDto);
 		return "paypalApplicationUserDto";
 	}

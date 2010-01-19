@@ -7,26 +7,32 @@ import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
-import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDaoImpl;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.Role;
 import com.appspot.demo.server.paypal.service.UserInfoService;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+
 
 public class PaypalAuthFilter implements Filter{
 	
 	public static Logger logger = Logger.getLogger(PaypalAuthFilter.class.getName());
 	
+	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
 	private PaypalApplicationUserDao appUserDao;
 	
 	@Override
@@ -45,6 +51,7 @@ public class PaypalAuthFilter implements Filter{
 			logger.info("User has authenticated");
 			chain.doFilter(request, response);
 			if(this.appUserDao.getApplicationUserByEmail(this.userInfoService.getCurrentUserEmail())==null){
+				logger.info("Creating New User");
 				PaypalApplicationUser appUser  = new PaypalApplicationUser();
 				appUser.setDateCreated(new Date());
 				appUser.setEmail(this.userInfoService.getCurrentUserEmail());
@@ -60,10 +67,18 @@ public class PaypalAuthFilter implements Filter{
 	}
 
 	@Override
-	public void init(FilterConfig arg0) throws ServletException {
+	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
-		this.userInfoService = new UserInfoService();
-		this.appUserDao = new PaypalApplicationUserDaoImpl();
+	
+		ServletContext servletContext = filterConfig.getServletContext();
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+ 
+		AutowireCapableBeanFactory autowireCapableBeanFactory = webApplicationContext.getAutowireCapableBeanFactory();
+ 		
+		
+		//autowireCapableBeanFactory.configureBean(this, "UserInfoService");
+		//autowireCapableBeanFactory.configureBean(this, "PaypalApplicationUserDao");
+		autowireCapableBeanFactory.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
 	}
 	
 

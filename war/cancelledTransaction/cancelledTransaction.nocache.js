@@ -1,5 +1,5 @@
-function paypalSuccess(){
-  var $intern_0 = '', $intern_29 = '" for "gwt:onLoadErrorFn"', $intern_27 = '" for "gwt:onPropertyErrorFn"', $intern_12 = '"><\/script>', $intern_14 = '#', $intern_53 = '.cache.html', $intern_16 = '/', $intern_47 = '12EEA2138ED104350247B792C71EA6F3', $intern_48 = '423B08A200DBA9A58A24610810966CB2', $intern_49 = '9734727E858D0EFA9122FF789CFAFE77', $intern_55 = '<script defer="defer">paypalSuccess.onInjectionDone(\'paypalSuccess\')<\/script>', $intern_11 = '<script id="', $intern_24 = '=', $intern_15 = '?', $intern_50 = 'A34B4A26DE8F3317A0551D8E5DB1C7E9', $intern_26 = 'Bad handler "', $intern_51 = 'CF16407C5EF31745F0537F968EC14092', $intern_52 = 'D20D37EE9AFF9F896DC585A7B42C0EF5', $intern_54 = 'DOMContentLoaded', $intern_13 = 'SCRIPT', $intern_10 = '__gwt_marker_paypalSuccess', $intern_17 = 'base', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_19 = 'clear.cache.gif', $intern_23 = 'content', $intern_9 = 'end', $intern_41 = 'gecko', $intern_42 = 'gecko1_8', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_28 = 'gwt:onLoadErrorFn', $intern_25 = 'gwt:onPropertyErrorFn', $intern_22 = 'gwt:property', $intern_45 = 'hosted.html?paypalSuccess', $intern_40 = 'ie6', $intern_39 = 'ie8', $intern_30 = 'iframe', $intern_18 = 'img', $intern_31 = "javascript:''", $intern_44 = 'loadExternalRefs', $intern_20 = 'meta', $intern_33 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_38 = 'msie', $intern_21 = 'name', $intern_35 = 'opera', $intern_1 = 'paypalSuccess', $intern_32 = 'position:absolute;width:0;height:0;border:none', $intern_37 = 'safari', $intern_46 = 'selectingPermutation', $intern_2 = 'startup', $intern_43 = 'unknown', $intern_34 = 'user.agent', $intern_36 = 'webkit';
+function cancelledTransaction(){
+  var $intern_0 = '', $intern_29 = '" for "gwt:onLoadErrorFn"', $intern_27 = '" for "gwt:onPropertyErrorFn"', $intern_12 = '"><\/script>', $intern_14 = '#', $intern_53 = '.cache.html', $intern_16 = '/', $intern_47 = '41393B0C75B99A0D9A68EE91AA092EC9', $intern_48 = '55310B7EABE39C0E080A645BA68AFD71', $intern_49 = '62EFCEEF86AD5C6F66F6D70A10018DF3', $intern_50 = '720765553569621C871DFA7F7E396DE4', $intern_55 = '<script defer="defer">cancelledTransaction.onInjectionDone(\'cancelledTransaction\')<\/script>', $intern_11 = '<script id="', $intern_24 = '=', $intern_15 = '?', $intern_26 = 'Bad handler "', $intern_51 = 'D3801B4EAACD6F8A1917AA44A46F3208', $intern_54 = 'DOMContentLoaded', $intern_52 = 'E3044DC3FF99B96A1CA0C53A6FFEB4CA', $intern_13 = 'SCRIPT', $intern_10 = '__gwt_marker_cancelledTransaction', $intern_17 = 'base', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_1 = 'cancelledTransaction', $intern_19 = 'clear.cache.gif', $intern_23 = 'content', $intern_9 = 'end', $intern_41 = 'gecko', $intern_42 = 'gecko1_8', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_28 = 'gwt:onLoadErrorFn', $intern_25 = 'gwt:onPropertyErrorFn', $intern_22 = 'gwt:property', $intern_45 = 'hosted.html?cancelledTransaction', $intern_40 = 'ie6', $intern_39 = 'ie8', $intern_30 = 'iframe', $intern_18 = 'img', $intern_31 = "javascript:''", $intern_44 = 'loadExternalRefs', $intern_20 = 'meta', $intern_33 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_38 = 'msie', $intern_21 = 'name', $intern_35 = 'opera', $intern_32 = 'position:absolute;width:0;height:0;border:none', $intern_37 = 'safari', $intern_46 = 'selectingPermutation', $intern_2 = 'startup', $intern_43 = 'unknown', $intern_34 = 'user.agent', $intern_36 = 'webkit';
   var $wnd = window, $doc = document, $stats = $wnd.__gwtStatsEvent?function(a){
     return $wnd.__gwtStatsEvent(a);
   }
@@ -36,7 +36,7 @@ function paypalSuccess(){
         }
         ;
       }
-      paypalSuccess = null;
+      cancelledTransaction = null;
       frameWnd.gwtOnLoad(onLoadErrorFunc, $intern_1, base);
       $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_8, millis:(new Date).getTime(), type:$intern_9});
     }
@@ -210,14 +210,14 @@ function paypalSuccess(){
   }
   ;
   values[$intern_34] = {gecko:0, gecko1_8:1, ie6:2, ie8:3, opera:4, safari:5};
-  paypalSuccess.onScriptLoad = function(){
+  cancelledTransaction.onScriptLoad = function(){
     if (frameInjected) {
       loadDone = true;
       maybeStartModule();
     }
   }
   ;
-  paypalSuccess.onInjectionDone = function(){
+  cancelledTransaction.onInjectionDone = function(){
     scriptsDone = true;
     $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_44, millis:(new Date).getTime(), type:$intern_9});
     maybeStartModule();
@@ -238,12 +238,12 @@ function paypalSuccess(){
   $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_3, millis:(new Date).getTime(), type:$intern_46});
   if (!isHostedMode()) {
     try {
-      unflattenKeylistIntoAnswers([$intern_40], $intern_47);
-      unflattenKeylistIntoAnswers([$intern_37], $intern_48);
-      unflattenKeylistIntoAnswers([$intern_42], $intern_49);
-      unflattenKeylistIntoAnswers([$intern_41], $intern_50);
-      unflattenKeylistIntoAnswers([$intern_39], $intern_51);
-      unflattenKeylistIntoAnswers([$intern_35], $intern_52);
+      unflattenKeylistIntoAnswers([$intern_41], $intern_47);
+      unflattenKeylistIntoAnswers([$intern_40], $intern_48);
+      unflattenKeylistIntoAnswers([$intern_39], $intern_49);
+      unflattenKeylistIntoAnswers([$intern_35], $intern_50);
+      unflattenKeylistIntoAnswers([$intern_42], $intern_51);
+      unflattenKeylistIntoAnswers([$intern_37], $intern_52);
       strongName = answers[computePropValue($intern_34)];
       initialHtml = strongName + $intern_53;
     }
@@ -284,4 +284,4 @@ function paypalSuccess(){
   $doc.write($intern_55);
 }
 
-paypalSuccess();
+cancelledTransaction();

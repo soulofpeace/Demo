@@ -67,19 +67,23 @@ public class PaymentController {
 	
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.GET)
-	public String cancelPaymentAgreement(@RequestParam("comment")String comment){
-		
+	public String cancelPaymentAgreement(){
+		logger.info("Returning cancelled payment view");
 		return "cancelPayment";
 	}
 	
 	@RequestMapping(value="/recordCancelledTransaction", method=RequestMethod.POST)
-	public String recordCancelledTransaction(@RequestParam("comment")String comment){
+	public String recordCancelledTransaction(@RequestParam("comment")String comment, HttpServletRequest request){
+		logger.info("logging cancelled transaction");
 		String email = this.userInfoService.getCurrentUserEmail();
 		PaypalApplicationUser appUser = this.appUserDao.getApplicationUserByEmail(email);
 		CancelledTransaction cancelledTransaction = new CancelledTransaction();
 		cancelledTransaction.setComment(comment);
 		cancelledTransaction.setDateCreated(new Date());
 		cancelledTransaction.setPaypalApplicationUser(appUser.getId());
+		HttpSession session = request.getSession();
+		String productPackageId = (String)session.getAttribute("productPackageId");
+		cancelledTransaction.setProductPackageKey(KeyFactory.stringToKey(productPackageId));
 		this.cancelledTransactionDao.saveCancelledTransaction(cancelledTransaction);
 		return "redirect:http://choonkeedemo.appspot.com/demo/paypal/productpackage/view";
 	}

@@ -25,6 +25,9 @@ public class CancelledTransaction {
 	
 	@Persistent
 	private Date dateCreated;
+	
+	@Persistent
+	private Key productPackageKey;
 
 	public void setId(Key id) {
 		this.id = id;
@@ -56,6 +59,14 @@ public class CancelledTransaction {
 
 	public Date getDateCreated() {
 		return dateCreated;
+	}
+
+	public void setProductPackageKey(Key productPackageKey) {
+		this.productPackageKey = productPackageKey;
+	}
+
+	public Key getProductPackageKey() {
+		return productPackageKey;
 	}
 
 }
