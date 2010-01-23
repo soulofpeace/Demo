@@ -65,7 +65,7 @@ public class CancellingTransaction implements EntryPoint {
 		this.container.add(commentLabel);
 		this.container.add(this.commentBox);
 		this.container.add(this.submitButton);
-		this.cancelForm = new FormPanel();
+		this.cancelForm = new FormPanel("_self");
 		this.cancelForm.setAction("/demo/paypal/payment/recordCancelledTransaction");
 		this.cancelForm.setEncoding(FormPanel.ENCODING_URLENCODED);
 		this.cancelForm.setWidget(container);

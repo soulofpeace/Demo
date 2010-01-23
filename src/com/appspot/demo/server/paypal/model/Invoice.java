@@ -1,6 +1,8 @@
 package com.appspot.demo.server.paypal.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -30,7 +32,21 @@ public class Invoice {
 	
 	@Persistent
 	private Date modifiedDate;
-
+	
+	@Persistent
+	private String status;
+	
+	@Persistent
+	private double outstandingBalance;
+	
+	@Persistent
+	private Date nextPaymentDate;
+	
+	@Persistent
+	private List<Key> transactions = new ArrayList<Key>();
+	 
+	
+	
 	public void setId(Key id) {
 		this.id = id;
 	}
@@ -78,6 +94,38 @@ public class Invoice {
 
 	public Date getModifiedDate() {
 		return modifiedDate;
+	}
+
+	public void setNextPaymentDate(Date nextPaymentDate) {
+		this.nextPaymentDate = nextPaymentDate;
+	}
+
+	public Date getNextPaymentDate() {
+		return nextPaymentDate;
+	}
+
+	public void setOutstandingBalance(double outstandingBalance) {
+		this.outstandingBalance = outstandingBalance;
+	}
+
+	public double getOutstandingBalance() {
+		return outstandingBalance;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setTransactions(List<Key> transactions) {
+		this.transactions = transactions;
+	}
+
+	public List<Key> getTransactions() {
+		return transactions;
 	}
 
 }

@@ -1,7 +1,9 @@
 package com.appspot.demo.server.paypal.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -19,9 +21,16 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
+import com.appspot.demo.server.paypal.dao.ActionLogDao;
 import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
+import com.appspot.demo.server.paypal.model.ActionSource;
+import com.appspot.demo.server.paypal.model.ActionType;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.Role;
+import com.appspot.demo.server.paypal.service.ActionLoggerService;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 
 
@@ -34,6 +43,9 @@ public class PaypalAuthFilter implements Filter{
 	
 	@Autowired
 	private PaypalApplicationUserDao appUserDao;
+	
+	@Autowired
+	private ActionLoggerService actionLoggerService; 
 	
 	@Override
 	public void destroy() {
@@ -57,7 +69,16 @@ public class PaypalAuthFilter implements Filter{
 				appUser.setEmail(this.userInfoService.getCurrentUserEmail());
 				appUser.setUserName(this.userInfoService.getName());
 				appUser.setRole(Role.CUSTOMER);
-				this.appUserDao.saveApplicationUser(appUser);
+				String keyString = this.appUserDao.saveApplicationUser(appUser);
+				if (keyString != null){
+					List<Key> keys = new ArrayList<Key>();
+					keys.add(KeyFactory.stringToKey(keyString));
+					this.actionLoggerService.log(ActionType.NEWUSER, ActionSource.WEB, null, keys);
+				}
+				else{
+					List<Key> keys = new ArrayList<Key>();
+					this.actionLoggerService.log(ActionType.FAILEDUSER, ActionSource.WEB, this.userInfoService.getCurrentUserEmail()+" failed to create", keys);
+				}
 			}
 		}
 		else{

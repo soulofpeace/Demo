@@ -6,12 +6,10 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.appspot.demo.client.paypal.dto.PaypalApplicationUserDto;
-import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -21,8 +19,6 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class PaypalApplicationUserController {
 	private static final Logger logger = Logger.getLogger(PaypalApplicationUserController.class.getName());
 	
-	@Autowired
-	private PaypalApplicationUserDao paypalApplicationUserDao;
 	
 	@Autowired
 	private UserInfoService userInfoService;
@@ -30,8 +26,7 @@ public class PaypalApplicationUserController {
 	@RequestMapping(value="/get", method=RequestMethod.GET)
 	public String getCurrentPaypalApplicationUser(Model model){
 		logger.info("returning current app user");
-		String email = this.userInfoService.getCurrentUserEmail();
-		PaypalApplicationUser applicationUser = this.paypalApplicationUserDao.getApplicationUserByEmail(email);
+		PaypalApplicationUser applicationUser= this.userInfoService.getCurrentApplicationUser();
 		PaypalApplicationUserDto applicationUserDto = new PaypalApplicationUserDto();
 		applicationUserDto.setKey(KeyFactory.keyToString(applicationUser.getId()));
 		applicationUserDto.setEmail(applicationUser.getEmail());

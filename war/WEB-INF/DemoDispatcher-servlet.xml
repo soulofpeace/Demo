@@ -13,10 +13,10 @@
         </bean>
         
         <bean id="apiCredential" class="com.appspot.demo.server.paypal.service.util.APICredential">
-        	<property name="user" value="sell1_1256008723_biz_api1.socialwok.com"/>
-        	<property name="password" value="1256008736" />
+        	<property name="user" value="social_1264232871_biz_api1.socialwok.com"/>
+        	<property name="password" value="1264232877" />
         	<property name="version" value="56.0" />
-        	<property name="signature" value="AyAQA1q4x3jihgYNo.MlslDeJ.h3AKyuoMd142QcPSPklX6uVwULY.87"/>
+        	<property name="signature" value="AGaZ3BIfuB-.fAkGXZTdFJwunQKDAC627GULQETp0H0ms3LZmGsvriwZ"/>
         </bean>
         
         <bean id="paypalCallerService" class="com.appspot.demo.server.paypal.service.util.PaypalCallerService">

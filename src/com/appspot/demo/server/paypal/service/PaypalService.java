@@ -133,6 +133,7 @@ public class PaypalService {
 			invoice.setCustomerId(customer.getId());
 			invoice.setProductPackageId(productPackage.getId());
 			invoice.setPaypalRecurringPaymentProfileId(profileId);
+			invoice.setStatus(decoder.get("STATUS"));
 			return invoice;
 		}
 		else{

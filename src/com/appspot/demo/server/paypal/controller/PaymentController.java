@@ -2,7 +2,9 @@ package com.appspot.demo.server.paypal.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,15 +22,19 @@ import com.appspot.demo.server.paypal.dao.PackageDao;
 import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
 import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 
+import com.appspot.demo.server.paypal.model.ActionSource;
+import com.appspot.demo.server.paypal.model.ActionType;
 import com.appspot.demo.server.paypal.model.CancelledTransaction;
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
+import com.appspot.demo.server.paypal.service.ActionLoggerService;
 import com.appspot.demo.server.paypal.service.MailerService;
 import com.appspot.demo.server.paypal.service.PaypalService;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 import com.appspot.demo.server.paypal.service.exception.PaypalException;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 
@@ -59,6 +65,9 @@ public class PaymentController {
 	private PaypalApplicationUserDao appUserDao;
 	
 	@Autowired
+	private ActionLoggerService actionLoggerService;
+	
+	@Autowired
 	private CancelledTransactionDao cancelledTransactionDao;
 	
 	private static final String createURL="http://choonkeedemo.appspot.com/demo/paypal/payment/create";
@@ -75,6 +84,7 @@ public class PaymentController {
 	@RequestMapping(value="/recordCancelledTransaction", method=RequestMethod.POST)
 	public String recordCancelledTransaction(@RequestParam("comment")String comment, HttpServletRequest request){
 		logger.info("logging cancelled transaction");
+		/**
 		String email = this.userInfoService.getCurrentUserEmail();
 		PaypalApplicationUser appUser = this.appUserDao.getApplicationUserByEmail(email);
 		CancelledTransaction cancelledTransaction = new CancelledTransaction();
@@ -85,6 +95,13 @@ public class PaymentController {
 		String productPackageId = (String)session.getAttribute("productPackageId");
 		cancelledTransaction.setProductPackageKey(KeyFactory.stringToKey(productPackageId));
 		this.cancelledTransactionDao.saveCancelledTransaction(cancelledTransaction);
+		**/
+		HttpSession session = request.getSession();
+		String productPackageId = (String)session.getAttribute("productPackageId");
+		List<Key> keys = new ArrayList<Key>();
+		keys.add(KeyFactory.stringToKey(productPackageId));
+		keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+		this.actionLoggerService.log(ActionType.CANCELTRANSACTION, ActionSource.WEB, comment, keys);
 		return "redirect:http://choonkeedemo.appspot.com/demo/paypal/productpackage/view";
 	}
 	
@@ -125,6 +142,22 @@ public class PaymentController {
 				if(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId())==null){
 					String customerId= this.customerDao.savePaypalCustomer(customer);
 					session.setAttribute("customerId", customerId);
+					if (customerId!=null){
+						List<Key> keys = new ArrayList<Key>();
+						keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+						keys.add(KeyFactory.stringToKey(customerId));
+						keys.add(KeyFactory.stringToKey(productId));
+	
+						this.actionLoggerService.log(ActionType.NEWCUSTOMER, ActionSource.WEB, null, keys);
+					}
+					else{
+						List<Key> keys = new ArrayList<Key>();
+						keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+						keys.add(KeyFactory.stringToKey(productId));
+						
+						this.actionLoggerService.log(ActionType.FAILEDCUSTOMER, ActionSource.WEB, null, keys);
+	
+					}
 				}
 				else{
 					String customerId = KeyFactory.keyToString(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId()).getId());
@@ -164,10 +197,27 @@ public class PaymentController {
 			PaypalCustomer customer = this.customerDao.getPaypalCustomerById(customerId);
 			Invoice invoice = this.paypalService.createRecurringPaymentsProfile(customer, productPackage, paypalToken);
 			if (invoice !=null){
-				this.invoiceDao.saveInvoice(customer, productPackage, invoice);
-				logger.info("profile Id is "+invoice.getPaypalRecurringPaymentProfileId());
-				this.sendConfirmationEmail(productPackage);
-				return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=true";
+				String invoiceId =this.invoiceDao.saveInvoice(customer, productPackage, invoice);
+				if(invoiceId !=null){
+					logger.info("profile Id is "+invoice.getPaypalRecurringPaymentProfileId());
+					this.sendConfirmationEmail(productPackage);
+					List<Key> keys = new ArrayList<Key>();
+					keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+					keys.add(productPackage.getId());
+					keys.add(customer.getId());
+					keys.add(KeyFactory.stringToKey(invoiceId));
+					this.actionLoggerService.log(ActionType.NEWINVOICE, ActionSource.WEB, null, keys);
+					return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=true";
+				}
+				else{
+					List<Key> keys = new ArrayList<Key>();
+					keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+					keys.add(productPackage.getId());
+					keys.add(customer.getId());
+					this.actionLoggerService.log(ActionType.FAILEDINVOICE, ActionSource.WEB, null, keys);
+					return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
+				}
+				
 			}
 			else{
 				return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";

@@ -19,7 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.appspot.demo.client.paypal.dto.ProductPackageDto;
 import com.appspot.demo.server.paypal.dao.PackageDao;
 
+import com.appspot.demo.server.paypal.model.ActionSource;
+import com.appspot.demo.server.paypal.model.ActionType;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
+import com.appspot.demo.server.paypal.service.ActionLoggerService;
+import com.appspot.demo.server.paypal.service.UserInfoService;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 
@@ -27,8 +32,15 @@ import com.google.appengine.api.datastore.KeyFactory;
 @RequestMapping("/paypal/productpackage")
 public class ProductPackageController {
 	private static final Logger logger = Logger.getLogger(ProductPackageController.class.getName());
+	
 	@Autowired
 	private PackageDao packageDao;
+	
+	@Autowired
+	private ActionLoggerService actionLoggerService;
+	
+	@Autowired
+	private UserInfoService userInfoService;
 	
 	@RequestMapping(value="/view", method=RequestMethod.GET)
 	public String viewAll(){
@@ -77,7 +89,18 @@ public class ProductPackageController {
 		productPackage.setPackageCost(packageCost);
 		productPackage.setBillingFrequency(billingFrequency);
 		productPackage.setBillingPeriod(billingPeriod);
-		packageDao.savePackage(productPackage);
+		String productPackageId = packageDao.savePackage(productPackage);
+		if(productPackageId!=null){
+			List<Key> keys = new ArrayList<Key>();
+			keys.add(KeyFactory.stringToKey(productPackageId));
+			keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+			this.actionLoggerService.log(ActionType.NEWPACKAGE, ActionSource.WEB, null, keys);
+		}
+		else{
+			List<Key> keys = new ArrayList<Key>();
+			keys.add(this.userInfoService.getCurrentApplicationUser().getId());
+			this.actionLoggerService.log(ActionType.FAILEDPACKAGE, ActionSource.WEB, "Fail to create "+packageName, keys);
+		}
 		
 		//testing codes for testing datastore
 		/**

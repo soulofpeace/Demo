@@ -12,7 +12,7 @@ import javax.jdo.annotations.Persistent;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable ="true")
-public class Transaction {
+public class PaypalTransaction {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key id;
@@ -20,10 +20,6 @@ public class Transaction {
 	@Persistent
 	private Date dateCreated;
 	
-	@Persistent 
-	private String type;
-	
-	//paypal transaction fields
 	@Persistent
 	private Key invoiceId;
 	
@@ -129,14 +125,6 @@ public class Transaction {
 
 	public Date getDateCreated() {
 		return dateCreated;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getType() {
-		return type;
 	}
 
 	public void setInvoiceId(Key invoiceId) {
