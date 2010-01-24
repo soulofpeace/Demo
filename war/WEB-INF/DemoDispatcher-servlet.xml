@@ -24,6 +24,11 @@
         	<property name="payPalCaller" ref="paypalCaller"/>
         </bean>
         
+        <bean id="paypalIPNVerifier" class="com.appspot.demo.server.paypal.service.util.PaypalIPNVerifier">
+        	<property name="paypalIPNServer" value="https://www.sandbox.paypal.com/cgi-bin/webscr"/>
+        	<property name="sellerEmail" value="social_1264232871_biz@socialwok.com"/>
+        </bean>
+        
         <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="mediaTypes">
         	<map>

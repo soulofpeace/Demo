@@ -135,31 +135,40 @@ public class PaymentController {
 			HttpSession session = request.getSession();
 			logger.info("Session paypalToken is "+session.getAttribute("paypalToken"));
 			PaypalCustomer customer = this.paypalService.getExpressCheckoutDetails((String) session.getAttribute("paypalToken"));
+			PaypalApplicationUser appUser = this.userInfoService.getCurrentApplicationUser();
 			logger.info("Customer email is"+customer.getPayerEmail());
 			String productId = (String) session.getAttribute("productPackageId");
 			logger.info("productPackageId is "+productId);
 			if(customer!=null){
 				if(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId())==null){
 					String customerId= this.customerDao.savePaypalCustomer(customer);
+					customer= this.customerDao.getPaypalCustomerById(customerId);
+					customer.getAppUser().add(appUser.getId());
+					this.customerDao.savePaypalCustomer(customer);
 					session.setAttribute("customerId", customerId);
 					if (customerId!=null){
 						List<Key> keys = new ArrayList<Key>();
 						keys.add(this.userInfoService.getCurrentApplicationUser().getId());
 						keys.add(KeyFactory.stringToKey(customerId));
 						keys.add(KeyFactory.stringToKey(productId));
+						keys.add(appUser.getId());
 	
 						this.actionLoggerService.log(ActionType.NEWCUSTOMER, ActionSource.WEB, null, keys);
 					}
 					else{
+						
 						List<Key> keys = new ArrayList<Key>();
 						keys.add(this.userInfoService.getCurrentApplicationUser().getId());
 						keys.add(KeyFactory.stringToKey(productId));
-						
+						keys.add(appUser.getId());
 						this.actionLoggerService.log(ActionType.FAILEDCUSTOMER, ActionSource.WEB, null, keys);
 	
 					}
 				}
 				else{
+					customer= this.customerDao.getPaypalCustomerByPaypalId(customer.getPayerId());
+					customer.getAppUser().add(appUser.getId());
+					this.customerDao.savePaypalCustomer(customer);
 					String customerId = KeyFactory.keyToString(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId()).getId());
 					session.setAttribute("customerId", customerId);
 				}
@@ -195,9 +204,10 @@ public class PaymentController {
 			RecurringProductPackage productPackage = this.packageDao.getPackageById(packageId);
 			String customerId = (String) session.getAttribute("customerId");
 			PaypalCustomer customer = this.customerDao.getPaypalCustomerById(customerId);
+			PaypalApplicationUser appUser = this.userInfoService.getCurrentApplicationUser();
 			Invoice invoice = this.paypalService.createRecurringPaymentsProfile(customer, productPackage, paypalToken);
 			if (invoice !=null){
-				String invoiceId =this.invoiceDao.saveInvoice(customer, productPackage, invoice);
+				String invoiceId =this.invoiceDao.saveInvoice(customer, productPackage, invoice, appUser);
 				if(invoiceId !=null){
 					logger.info("profile Id is "+invoice.getPaypalRecurringPaymentProfileId());
 					this.sendConfirmationEmail(productPackage);

@@ -78,6 +78,9 @@ public class PaypalCustomer {
 	
 	@Persistent
 	private Date dateCreated;
+	
+	@Persistent
+	private List<Key> appUsers = new ArrayList<Key>();
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -245,6 +248,14 @@ public class PaypalCustomer {
 
 	public Date getDateCreated() {
 		return dateCreated;
+	}
+
+	public void setAppUser(List<Key> appUsers) {
+		this.appUsers = appUsers;
+	}
+
+	public List<Key> getAppUser() {
+		return appUsers;
 	}
 
 }

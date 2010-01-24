@@ -43,7 +43,13 @@ public class Invoice {
 	private Date nextPaymentDate;
 	
 	@Persistent
+	private String currencyCode;
+	
+	@Persistent
 	private List<Key> transactions = new ArrayList<Key>();
+	
+	@Persistent
+	private Key appUser;
 	 
 	
 	
@@ -126,6 +132,22 @@ public class Invoice {
 
 	public List<Key> getTransactions() {
 		return transactions;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setAppUser(Key appUser) {
+		this.appUser = appUser;
+	}
+
+	public Key getAppUser() {
+		return appUser;
 	}
 
 }
