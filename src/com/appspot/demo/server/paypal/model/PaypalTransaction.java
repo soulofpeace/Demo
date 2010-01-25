@@ -21,6 +21,15 @@ public class PaypalTransaction {
 	private Date dateCreated;
 	
 	@Persistent
+	private double mcGross;
+	
+	@Persistent
+	private double mcFee;
+	
+	@Persistent
+	private double mcHandling;
+	
+	@Persistent
 	private Key invoiceId;
 	
 	@Persistent
@@ -82,6 +91,12 @@ public class PaypalTransaction {
 	
 	@Persistent
 	private String salestax;
+
+	@Persistent 
+	private Date paymentDate;
+	
+	@Persistent
+	private String subject;
 	
 	@Persistent
 	private ArrayList<String> paymentItemDescription;

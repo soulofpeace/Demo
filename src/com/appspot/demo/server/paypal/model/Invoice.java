@@ -46,6 +46,15 @@ public class Invoice {
 	private String currencyCode;
 	
 	@Persistent
+	private double initialPaymentAmount;
+	
+	@Persistent
+	private double tax;
+	
+	@Persistent
+	private double shipping;
+	
+	@Persistent
 	private List<Key> transactions = new ArrayList<Key>();
 	
 	@Persistent
@@ -148,6 +157,30 @@ public class Invoice {
 
 	public Key getAppUser() {
 		return appUser;
+	}
+
+	public void setInitialPaymentAmount(double initialPaymentAmount) {
+		this.initialPaymentAmount = initialPaymentAmount;
+	}
+
+	public double getInitialPaymentAmount() {
+		return initialPaymentAmount;
+	}
+
+	public void setTax(double tax) {
+		this.tax = tax;
+	}
+
+	public double getTax() {
+		return tax;
+	}
+
+	public void setShipping(double shipping) {
+		this.shipping = shipping;
+	}
+
+	public double getShipping() {
+		return shipping;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
@@ -146,6 +147,7 @@ public class PaypalService {
 	
 	private String getGMTTimeNow(){
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String gmtDate = df.format(new Date());
 		logger.info("Current Date is "+gmtDate);
 		return gmtDate;

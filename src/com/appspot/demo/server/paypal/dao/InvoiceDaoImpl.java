@@ -60,6 +60,9 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			pm.close();
 		}
 	}
+	
+	
+	
 
 	@Override
 	public Invoice getInvoiceByProfileId(String profileId) {
@@ -83,6 +86,19 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			if(pm.currentTransaction().isActive()){
 				pm.currentTransaction().rollback();
 			}
+			pm.close();
+		}
+	}
+
+	@Override
+	public String saveInvoice(Invoice invoice) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try{
+			invoice = pm.makePersistent(invoice);
+			return KeyFactory.keyToString(invoice.getId());
+		}
+		finally{
 			pm.close();
 		}
 	}

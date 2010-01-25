@@ -1,5 +1,8 @@
 package com.appspot.demo.server.paypal.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.xml.ws.Action;
@@ -12,10 +15,14 @@ import com.appspot.demo.server.paypal.dao.PackageDao;
 import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 import com.appspot.demo.server.paypal.model.ActionSource;
 import com.appspot.demo.server.paypal.model.ActionType;
+import com.appspot.demo.server.paypal.model.Invoice;
+import com.appspot.demo.server.paypal.model.PaypalCustomer;
+import com.appspot.demo.server.paypal.model.PaypalTransaction;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.appspot.demo.server.paypal.service.exception.PaypalException;
 import com.appspot.demo.server.paypal.service.util.PaypalIPNVerifier;
 import com.appspot.demo.server.paypal.service.util.PaypalResponseDecoder;
+import com.google.appengine.api.datastore.KeyFactory;
 
 @Service
 public class IPNService {
@@ -42,12 +49,15 @@ public class IPNService {
 			try {
 				decoder.decode(responseString);
 				String txnType = decoder.get("txn_type");
+				logger.info("txn type is "+txnType);
 				if(txnType.equalsIgnoreCase("recurring_payment_profile_created")){
-					this.parseRecurringProfileMsg(decoder);
+					logger.info("Recurring payment profile parsing");
+					this.parseRecurringProfileMsg(decoder, responseString);
 					
 				}
 				else if(txnType.equalsIgnoreCase("recurring_payment")){
-					this.parseRecurringPaymentMsg(decoder);
+					logger.info("Recurring payment");
+					//this.parseRecurringPaymentMsg(decoder, responseString);
 				}
 				else{
 					logger.warning("No such transaction type supported yet "+txnType);
@@ -65,68 +75,136 @@ public class IPNService {
 		}
 	}
 	
-	private void parseRecurringProfileMsg(PaypalResponseDecoder decoder){
-		String responsePaymentCycle = decoder.get("responsepayment_cycle");
-		String lastName = decoder.get("last_name");
-		String nextPaymentDate = decoder.get("next_payment_date");
-		String residenceCountry = decoder.get("residence_country");
-		String initialPaymentAmount = decoder.get("initial_payment_amount");
+	private void parseRecurringProfileMsg(PaypalResponseDecoder decoder, String responseString){
+		String paymentCycle = decoder.get("payment_cycle");
 		String timeCreated = decoder.get("time_created");
 		String verifySignature= decoder.get("verify_sign");
 		String periodType= decoder.get("period_type");
-		String payerStatus= decoder.get("payer_status");
-		String tax = decoder.get("tax");
-		String payerEmail = decoder.get("payer_email");
-		String firstName = decoder.get("first_name");
 		String productType = decoder.get("product_type");
-		String shipping = decoder.get("shipping");
 		String amountPerCycle= decoder.get("amount_per_cycle");
 		String amount = decoder.get("amount");
-		String status = decoder.get("profile_status");
-		String outstandingBalance = decoder.get("outstanding_balance");
-		String currencyCode = decoder.get("currency_code");
-		String payerId = decoder.get("payer_id");
 		String profileId = decoder.get("recurring_payment_id");
+		String payerId = decoder.get("payer_id");
 		String product_name= decoder.get("product_name");
+		
+		Invoice invoice =this.invoiceDao.getInvoiceByProfileId(profileId);
+		RecurringProductPackage productPackage = this.packageDao.getPackageById(KeyFactory.keyToString(invoice.getProductPackageId()));
+		PaypalCustomer customer = this.paypalCustomerDao.getPaypalCustomerById(KeyFactory.keyToString(invoice.getCustomerId()));
+		if (!productPackage.getPackageDescription().equalsIgnoreCase(product_name)){
+			logger.warning("packageName "+productPackage.getPackageDescription()+" does not match product name"+product_name);
+			this.actionLoggerService.log(ActionType.NOTVERIFIEDIPN, ActionSource.PAYPAL, responseString, null);
+			return;
+		}
+		if(!customer.getPayerId().equalsIgnoreCase(payerId)){
+			logger.warning("payer id does not equal to our payerid in db");
+			this.actionLoggerService.log(ActionType.NOTVERIFIEDIPN, ActionSource.PAYPAL, responseString, null);
+			return;
+		}
+		
+		this.updateInvoice(decoder, invoice);
+		this.updatePaypalCustomer(decoder, customer);
+		
+		
+		
 		
 	}
 	
-	private void parseRecurringPaymentMsg(PaypalResponseDecoder decoder){
-		String responsemcGross= decoder.get("responsemc_gross");
-		String outstandingBalance = decoder.get("outstanding_balance");
-		String periodType = decoder.get("period_type");
-		String nextPaymentDate = decoder.get("next_payment_date");
-		String protectionEligibility = decoder.get("protection_eligibility");
-		String paymentCycle = decoder.get("payment_cycle");
-		String tax =decoder.get("tax");
-		String payerId = decoder.get("payer_id");
-		String paymentDate = decoder.get("payment_date");
-		String paymentStatus = decoder.get("payment_status");
-		String productName = decoder.get("product_name");
-		String recurringPaymentId = decoder.get("recurring_payment_id");
-		String firstName = decoder.get("first_name");
-		String mcFee=decoder.get("mc_fee");
-		String amountPerCycle= decoder.get("amount_per_cycle");
-		String payerStatus = decoder.get("payer_status");
-		String currencyCode= decoder.get("currency_code");
+	private void parseRecurringPaymentMsg(PaypalResponseDecoder decoder, String responseString){
+		String receiverId = decoder.get("receiver_id");
 		String business = decoder.get("business");
 		String verifySign= decoder.get("verify_sign");
-		String payerEmail= decoder.get("payer_email");
-		String initialPayerAmount = decoder.get("initial_payment_amount");
-		String profileStatus = decoder.get("profile_status");
-		String amount = decoder.get("amount");
-		String txnId= decoder.get("txn_id");
-		String paymentName = decoder.get("payment_type");
-		String lastName= decoder.get("last_name");
 		String receiverEmail = decoder.get("receiver_email");
-		String paymentFee = decoder.get("payment_fee");
-		String receiverId = decoder.get("receiver_id");
-		String mcCurrency= decoder.get("mc_currency");
-		String residenceCountry = decoder.get("residence_country");
-		String transactionSubject = decoder.get("transaction_subject");
+		String timeCreated = decoder.get("time_created");
+		String productType =decoder.get("product_type");
+		String paymentCycle = decoder.get("payment_cycle");
+		String periodType = decoder.get("period_type");
+		String amountPerCycle= decoder.get("amount_per_cycle");
+
+		String profileId = decoder.get("recurring_payment_id");
+		String product_name= decoder.get("product_name");
+		String payerId = decoder.get("payer_id");
+		
+		
+	
+		Invoice invoice =this.invoiceDao.getInvoiceByProfileId(profileId);
+		RecurringProductPackage productPackage = this.packageDao.getPackageById(KeyFactory.keyToString(invoice.getProductPackageId()));
+		PaypalCustomer customer = this.paypalCustomerDao.getPaypalCustomerById(KeyFactory.keyToString(invoice.getCustomerId()));
+		if (!productPackage.getPackageName().equalsIgnoreCase(product_name)){
+			this.actionLoggerService.log(ActionType.NOTVERIFIEDIPN, ActionSource.PAYPAL, responseString, null);
+			return;
+		}
+		if(!customer.getPayerId().equalsIgnoreCase(payerId)){
+			this.actionLoggerService.log(ActionType.NOTVERIFIEDIPN, ActionSource.PAYPAL, responseString, null);
+			return;
+		}
+	}
+	
+	
+	private Date parseDate(String dateString){
+		logger.info("Parsing date "+dateString);
+		SimpleDateFormat pstDateFormat = new SimpleDateFormat("HH:mm:ss MMM d, yyyy z");
+		try {
+			return pstDateFormat.parse(dateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			logger.warning("Unable to parse Date "+dateString);
+			return new Date();
+		}
+	}
+	
+	
+	private void updateTransaction(PaypalResponseDecoder decoder, PaypalTransaction paypalTransaction){
+		String mcGross= decoder.get("mc_gross");
+		String currencyCode= decoder.get("currency_code");
+		String mcFee=decoder.get("mc_fee");
 		String paymentGross = decoder.get("payment_gross");
 		String shipping = decoder.get("shipping");
-		String productType =decoder.get("product_type");
-		String timeCreated = decoder.get("time_created");
+		String txnId= decoder.get("txn_id");
+		String paymentDate = decoder.get("payment_date");
+		String protectionEligibility = decoder.get("protection_eligibility");
+		String mcCurrency= decoder.get("mc_currency");
+		String transactionSubject = decoder.get("transaction_subject");
+		String paymentStatus = decoder.get("payment_status");
+		String paymentFee = decoder.get("payment_fee");
+		String paymentType = decoder.get("payment_type");
+		String reasonCode = decoder.get("reason_code");
+		//check for null before setting
+	}
+	
+	private void updatePaypalCustomer(PaypalResponseDecoder decoder, PaypalCustomer customer){
+		String lastName = decoder.get("last_name");
+		String residenceCountry = decoder.get("residence_country");
+		String payerEmail = decoder.get("payer_email");
+		String firstName = decoder.get("first_name");
+		String payerStatus= decoder.get("payer_status");
+		
+		customer.setPayerStatus(payerStatus);
+		customer.setPayerEmail(payerEmail);
+		customer.setLastname(lastName);
+		customer.setCountryCode(residenceCountry);
+		customer.setFirstname(firstName);
+		
+		this.paypalCustomerDao.savePaypalCustomer(customer);
+	}
+	
+	
+	private void updateInvoice(PaypalResponseDecoder decoder, Invoice invoice){
+		String status = decoder.get("profile_status");
+		String outstandingBalance = decoder.get("outstanding_balance");
+		String currencyCode = decoder.get("currency_code");
+		String nextPaymentDate = decoder.get("next_payment_date");
+		String initialPaymentAmount = decoder.get("initial_payment_amount");
+		String tax = decoder.get("tax");
+		String shipping = decoder.get("shipping");
+		
+		invoice.setCurrencyCode(currencyCode);
+		invoice.setStatus(status);
+		invoice.setOutstandingBalance(Double.parseDouble(outstandingBalance));
+		invoice.setNextPaymentDate(this.parseDate(nextPaymentDate));
+		invoice.setInitialPaymentAmount(Double.parseDouble(initialPaymentAmount));
+		invoice.setTax(Double.parseDouble(tax));
+		invoice.setShipping(Double.parseDouble(shipping));
+		
+		this.invoiceDao.saveInvoice(invoice);
 	}
 }
