@@ -11,6 +11,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable(identityType =  IdentityType.APPLICATION, detachable = "true")
 public class ActionLog {
@@ -22,7 +23,7 @@ public class ActionLog {
 	private ActionType type;
 	
 	@Persistent
-	private String comment;
+	private Text comment;
 	
 	@Persistent
 	private Date dateCreated;
@@ -49,12 +50,12 @@ public class ActionLog {
 		return type;
 	}
 
-	public void setComment(String comment) {
+	public void setComment(Text comment) {
 		this.comment = comment;
 	}
 
-	public String getComment() {
-		return comment;
+	public Text getComment() {
+		return this.comment;
 	}
 
 	public void setDateCreated(Date dateCreated) {

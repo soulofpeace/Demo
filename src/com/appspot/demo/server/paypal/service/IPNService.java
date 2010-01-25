@@ -41,7 +41,7 @@ public class IPNService {
 			PaypalResponseDecoder decoder = new PaypalResponseDecoder();
 			try {
 				decoder.decode(responseString);
-				String txnType = decoder.get("txnType");
+				String txnType = decoder.get("txn_type");
 				if(txnType.equalsIgnoreCase("recurring_payment_profile_created")){
 					this.parseRecurringProfileMsg(decoder);
 					
@@ -60,11 +60,34 @@ public class IPNService {
 			}
 		}
 		else{
+			logger.warning("Unable to verify IPN Message "+responseString);
 			this.actionLoggerService.log(ActionType.NOTVERIFIEDIPN, ActionSource.PAYPAL, responseString, null);
 		}
 	}
 	
 	private void parseRecurringProfileMsg(PaypalResponseDecoder decoder){
+		String responsePaymentCycle = decoder.get("responsepayment_cycle");
+		String lastName = decoder.get("last_name");
+		String nextPaymentDate = decoder.get("next_payment_date");
+		String residenceCountry = decoder.get("residence_country");
+		String initialPaymentAmount = decoder.get("initial_payment_amount");
+		String timeCreated = decoder.get("time_created");
+		String verifySignature= decoder.get("verify_sign");
+		String periodType= decoder.get("period_type");
+		String payerStatus= decoder.get("payer_status");
+		String tax = decoder.get("tax");
+		String payerEmail = decoder.get("payer_email");
+		String firstName = decoder.get("first_name");
+		String productType = decoder.get("product_type");
+		String shipping = decoder.get("shipping");
+		String amountPerCycle= decoder.get("amount_per_cycle");
+		String amount = decoder.get("amount");
+		String status = decoder.get("profile_status");
+		String outstandingBalance = decoder.get("outstanding_balance");
+		String currencyCode = decoder.get("currency_code");
+		String payerId = decoder.get("payer_id");
+		String profileId = decoder.get("recurring_payment_id");
+		String product_name= decoder.get("product_name");
 		
 	}
 	

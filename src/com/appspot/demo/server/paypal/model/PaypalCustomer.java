@@ -3,6 +3,7 @@ package com.appspot.demo.server.paypal.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -79,8 +80,8 @@ public class PaypalCustomer {
 	@Persistent
 	private Date dateCreated;
 	
-	@Persistent
-	private List<Key> appUsers = new ArrayList<Key>();
+	@Persistent(defaultFetchGroup = "true")
+	private Set<Key> appUsers;
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -250,11 +251,11 @@ public class PaypalCustomer {
 		return dateCreated;
 	}
 
-	public void setAppUser(List<Key> appUsers) {
+	public void setAppUser(Set<Key> appUsers) {
 		this.appUsers = appUsers;
 	}
 
-	public List<Key> getAppUser() {
+	public Set<Key> getAppUser() {
 		return appUsers;
 	}
 

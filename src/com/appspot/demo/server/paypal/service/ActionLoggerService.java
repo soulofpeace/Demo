@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 
 import com.appspot.demo.server.paypal.dao.ActionLogDao;
 import com.appspot.demo.server.paypal.model.ActionLog;
@@ -24,7 +25,12 @@ public class ActionLoggerService {
 	
 	public void log(ActionType actionType, ActionSource actionSource, String comment, List<Key> keys){
 		ActionLog actionLog = new ActionLog();
-		actionLog.setComment(comment);
+		if(actionLog.getComment()!=null){
+			actionLog.setComment(new Text(comment));
+		}
+		else{
+			actionLog.setComment(new Text(""));
+		}
 		actionLog.setDateCreated(new Date());
 		actionLog.setSource(actionSource);
 		actionLog.setType(actionType);

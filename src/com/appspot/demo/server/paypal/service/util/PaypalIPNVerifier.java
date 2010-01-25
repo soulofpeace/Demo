@@ -38,15 +38,16 @@ public class PaypalIPNVerifier {
 	public boolean verifyResponse(String responseString){
 		responseString = "cmd=_notify-validate&"+responseString;
 		String response = this.getURLResponse(this.paypalIPNServer, responseString);
-		if (response.equals("VERIFIED")){
+		if (response.equalsIgnoreCase("VERIFIED")){
 			PaypalResponseDecoder decoder = new PaypalResponseDecoder();
 			try {
 				decoder.decode(responseString);
-				if(decoder.get("receiver_email")==this.sellerEmail){
+				if(decoder.get("receiver_email").equalsIgnoreCase(this.sellerEmail)){
 					logger.info("Verified IPN Message");
 					return true;
 				}
 				else{
+					logger.warning("Unverified IPN Message");
 					return false;
 				}
 			}catch (PaypalException e) {
