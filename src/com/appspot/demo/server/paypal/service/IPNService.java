@@ -92,6 +92,41 @@ public class IPNService {
 	}
 	
 	private void parseRecurringPaymentMsg(PaypalResponseDecoder decoder){
-		
+		String responsemcGross= decoder.get("responsemc_gross");
+		String outstandingBalance = decoder.get("outstanding_balance");
+		String periodType = decoder.get("period_type");
+		String nextPaymentDate = decoder.get("next_payment_date");
+		String protectionEligibility = decoder.get("protection_eligibility");
+		String paymentCycle = decoder.get("payment_cycle");
+		String tax =decoder.get("tax");
+		String payerId = decoder.get("payer_id");
+		String paymentDate = decoder.get("payment_date");
+		String paymentStatus = decoder.get("payment_status");
+		String productName = decoder.get("product_name");
+		String recurringPaymentId = decoder.get("recurring_payment_id");
+		String firstName = decoder.get("first_name");
+		String mcFee=decoder.get("mc_fee");
+		String amountPerCycle= decoder.get("amount_per_cycle");
+		String payerStatus = decoder.get("payer_status");
+		String currencyCode= decoder.get("currency_code");
+		String business = decoder.get("business");
+		String verifySign= decoder.get("verify_sign");
+		String payerEmail= decoder.get("payer_email");
+		String initialPayerAmount = decoder.get("initial_payment_amount");
+		String profileStatus = decoder.get("profile_status");
+		String amount = decoder.get("amount");
+		String txnId= decoder.get("txn_id");
+		String paymentName = decoder.get("payment_type");
+		String lastName= decoder.get("last_name");
+		String receiverEmail = decoder.get("receiver_email");
+		String paymentFee = decoder.get("payment_fee");
+		String receiverId = decoder.get("receiver_id");
+		String mcCurrency= decoder.get("mc_currency");
+		String residenceCountry = decoder.get("residence_country");
+		String transactionSubject = decoder.get("transaction_subject");
+		String paymentGross = decoder.get("payment_gross");
+		String shipping = decoder.get("shipping");
+		String productType =decoder.get("product_type");
+		String timeCreated = decoder.get("time_created");
 	}
 }
