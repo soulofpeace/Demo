@@ -63,10 +63,10 @@ public class PaypalTransaction {
 	private double settleAmount;
 	
 	@Persistent
-	private String taxAmount;
+	private double taxAmount;
 	
 	@Persistent
-	private String exchangeRate;
+	private double exchangeRate;
 	
 	@Persistent
 	private String paymentStatus;
@@ -90,7 +90,7 @@ public class PaypalTransaction {
 	private String note;
 	
 	@Persistent
-	private String salestax;
+	private double salestax;
 
 	@Persistent 
 	private Date paymentDate;
@@ -105,10 +105,10 @@ public class PaypalTransaction {
 	private ArrayList<String> paymentItemNumber;
 	
 	@Persistent
-	private ArrayList<String> paymentItemquantity;
+	private ArrayList<Integer> paymentItemquantity;
 	
 	@Persistent
-	private ArrayList<String> paymentItemAmount;
+	private ArrayList<Double> paymentItemAmount;
 	
 	@Persistent 
 	private ArrayList<String> paymentItemOptionName;
@@ -230,19 +230,19 @@ public class PaypalTransaction {
 		return settleAmount;
 	}
 
-	public void setTaxAmount(String taxAmount) {
+	public void setTaxAmount(double taxAmount) {
 		this.taxAmount = taxAmount;
 	}
 
-	public String getTaxAmount() {
+	public double getTaxAmount() {
 		return taxAmount;
 	}
 
-	public void setExchangeRate(String exchangeRate) {
+	public void setExchangeRate(double exchangeRate) {
 		this.exchangeRate = exchangeRate;
 	}
 
-	public String getExchangeRate() {
+	public double getExchangeRate() {
 		return exchangeRate;
 	}
 
@@ -302,11 +302,11 @@ public class PaypalTransaction {
 		return note;
 	}
 
-	public void setSalestax(String salestax) {
+	public void setSalestax(double salestax) {
 		this.salestax = salestax;
 	}
 
-	public String getSalestax() {
+	public double getSalestax() {
 		return salestax;
 	}
 
@@ -326,19 +326,19 @@ public class PaypalTransaction {
 		return paymentItemNumber;
 	}
 
-	public void setPaymentItemquantity(ArrayList<String> paymentItemquantity) {
+	public void setPaymentItemquantity(ArrayList<Integer> paymentItemquantity) {
 		this.paymentItemquantity = paymentItemquantity;
 	}
 
-	public ArrayList<String> getPaymentItemquantity() {
+	public ArrayList<Integer> getPaymentItemquantity() {
 		return paymentItemquantity;
 	}
 
-	public void setPaymentItemAmount(ArrayList<String> paymentItemAmount) {
+	public void setPaymentItemAmount(ArrayList<Double> paymentItemAmount) {
 		this.paymentItemAmount = paymentItemAmount;
 	}
 
-	public ArrayList<String> getPaymentItemAmount() {
+	public ArrayList<Double> getPaymentItemAmount() {
 		return paymentItemAmount;
 	}
 
@@ -380,6 +380,22 @@ public class PaypalTransaction {
 
 	public Key getPaypalProductPackageKey() {
 		return paypalProductPackageKey;
+	}
+
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getSubject() {
+		return subject;
 	}
 	
 	
