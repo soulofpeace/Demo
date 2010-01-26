@@ -116,7 +116,7 @@ public class PaypalService {
 			String orderTime = decoder.get("ORDERTIME");
 			String amount = decoder.get("AMT");
 			String currencyCode = decoder.get("CURRENCYCODE");
-			String feeAmount =  decoder.get("CURRENCYCODE");
+			String feeAmount =  decoder.get("FEEAMT");
 			String settleAmount = decoder.get("SETTLEAMT");
 			String taxAmount = decoder.get("TAXAMT");
 			String exchangeRate = decoder.get("EXCHANGERATE");
@@ -129,38 +129,85 @@ public class PaypalService {
 			String note = decoder.get("NOTE");
 			String saleTax = decoder.get("SALESTAX");
 			
-			paypalTransaction.setTransactionId(transactionId);
-			paypalTransaction.setParentTransactionId(parentTransactionId);
-			paypalTransaction.setReceiptId(receiptId);
-			paypalTransaction.setTransactionType(transactionType);
-			paypalTransaction.setPaymentType(paymentType);
-			paypalTransaction.setOrderTime(this.parseDate(orderTime));
-			paypalTransaction.setAmount(Double.parseDouble(amount));
-			paypalTransaction.setCurrencyCode(currencyCode);
-			paypalTransaction.setFeeAmount(Double.parseDouble(feeAmount));
-			paypalTransaction.setSettleAmount(Double.parseDouble(settleAmount));
-			paypalTransaction.setTaxAmount(Double.parseDouble(taxAmount));
-			paypalTransaction.setPendingReason(pendingReason);
-			paypalTransaction.setReasonCode(reasonCode);
-			paypalTransaction.setProtectionEligibility(protectionEligibilty);
-			paypalTransaction.setInvnum(invnum);
-			paypalTransaction.setCustom(custom);
-			paypalTransaction.setNote(note);
-			paypalTransaction.setSalestax(Double.parseDouble(saleTax));
+			if(transactionId!=null){
+				paypalTransaction.setTransactionId(transactionId);
+			}
+			if(parentTransactionId!=null){
+				paypalTransaction.setParentTransactionId(parentTransactionId);
+			}
+			if(receiptId!=null){
+				paypalTransaction.setReceiptId(receiptId);
+			}
+			if(transactionType!=null){
+				paypalTransaction.setTransactionType(transactionType);
+			}
+			if(paymentType!=null){
+				paypalTransaction.setPaymentType(paymentType);
+			}
+			if(orderTime!=null){
+				paypalTransaction.setOrderTime(this.parseDate(orderTime));
+			}
+			if(amount!=null){
+				paypalTransaction.setAmount(Double.parseDouble(amount));
+			}
+			if(currencyCode!=null){
+				paypalTransaction.setCurrencyCode(currencyCode);
+			}
+			if(feeAmount!=null){
+				paypalTransaction.setFeeAmount(Double.parseDouble(feeAmount));
+			}
+			if(settleAmount!=null){
+				paypalTransaction.setSettleAmount(Double.parseDouble(settleAmount));
+			}
+			if(taxAmount!=null){
+				paypalTransaction.setTaxAmount(Double.parseDouble(taxAmount));
+			}
+			if(pendingReason!=null){
+				paypalTransaction.setPendingReason(pendingReason);
+			}
+			if(reasonCode!=null){
+				paypalTransaction.setReasonCode(reasonCode);
+			}
+			if(protectionEligibilty!=null){
+				paypalTransaction.setProtectionEligibility(protectionEligibilty);
+			}
+			if(invnum!=null){
+				paypalTransaction.setInvnum(invnum);
+			}
+			if(custom!=null){
+				paypalTransaction.setCustom(custom);
+			}
+			if(note!=null){
+				paypalTransaction.setNote(note);
+			}
+			if(saleTax!=null){
+				paypalTransaction.setSalestax(Double.parseDouble(saleTax));
+			}
 			int counter=1;
-			while((decoder.get("DESC")+counter)!=null){
+			while((decoder.get("L_DESC"+counter)!=null)){
 				paypalTransaction.getPaymentItemDescription().add(decoder.get("L_DESC"+counter));
-				paypalTransaction.getPaymentItemNumber().add(decoder.get("L_NUMBER"+counter));
-				paypalTransaction.getPaymentItemquantity().add(Integer.valueOf(decoder.get("L_QTY"+counter)));
-				paypalTransaction.getPaymentItemAmount().add(Double.valueOf(decoder.get("L_AMT"+counter)));
-				paypalTransaction.getPaymentItemOptionName().add(decoder.get("L_OPTIONSNAME"+counter));
-				paypalTransaction.getPaymentItemOptionValue().add(decoder.get("L_OPTIONSVALUE"+counter));
+				if(decoder.get("L_NUMBER"+counter)!=null){
+					paypalTransaction.getPaymentItemNumber().add(decoder.get("L_NUMBER"+counter));
+				}
+				if(decoder.get("L_QTY"+counter)!=null){
+					paypalTransaction.getPaymentItemquantity().add(Integer.valueOf(decoder.get("L_QTY"+counter)));
+				}
+				if(decoder.get("L_AMT"+counter)!=null){
+					paypalTransaction.getPaymentItemAmount().add(Double.valueOf(decoder.get("L_AMT"+counter)));
+				}
+				if(decoder.get("L_OPTIONSNAME"+counter)!=null){
+					paypalTransaction.getPaymentItemOptionName().add(decoder.get("L_OPTIONSNAME"+counter));
+				}
+				if(decoder.get("L_OPTIONSVALUE"+counter)!=null){
+					paypalTransaction.getPaymentItemOptionValue().add(decoder.get("L_OPTIONSVALUE"+counter));
+				}
 				counter++;
 			}
 			
 			return paypalTransaction;
 		}
 		else{
+			logger.warning("PaypalAPI call has failed");
 			return null;
 		}
 	}
@@ -246,9 +293,9 @@ public class PaypalService {
 	
 	private Date parseDate(String dateString){
 		logger.info("Parsing date "+dateString);
-		SimpleDateFormat pstDateFormat = new SimpleDateFormat("HH:mm:ss MMM d, yyyy z");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		try {
-			return pstDateFormat.parse(dateString);
+			return df.parse(dateString);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			logger.warning("Unable to parse Date "+dateString);

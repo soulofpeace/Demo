@@ -30,6 +30,9 @@ public class PaypalTransaction {
 	private double mcHandling;
 	
 	@Persistent
+	private String mcCurrency;
+	
+	@Persistent
 	private Key invoiceId;
 	
 	@Persistent
@@ -96,6 +99,9 @@ public class PaypalTransaction {
 	private Date paymentDate;
 	
 	@Persistent
+	private double paymentFee;
+	
+	@Persistent
 	private String subject;
 	
 	@Persistent
@@ -115,6 +121,12 @@ public class PaypalTransaction {
 	
 	@Persistent
 	private ArrayList<String> paymentItemOptionValue;
+	
+	@Persistent 
+	private double shipping;
+	
+	@Persistent
+	private double paymentGross;
 	
 	
 	//Paypal CancelledTransation & Paypal Profile Created
@@ -396,6 +408,62 @@ public class PaypalTransaction {
 
 	public String getSubject() {
 		return subject;
+	}
+
+	public void setMcGross(double mcGross) {
+		this.mcGross = mcGross;
+	}
+
+	public double getMcGross() {
+		return mcGross;
+	}
+
+	public void setMcFee(double mcFee) {
+		this.mcFee = mcFee;
+	}
+
+	public double getMcFee() {
+		return mcFee;
+	}
+
+	public void setMcHandling(double mcHandling) {
+		this.mcHandling = mcHandling;
+	}
+
+	public double getMcHandling() {
+		return mcHandling;
+	}
+
+	public void setShipping(double shipping) {
+		this.shipping = shipping;
+	}
+
+	public double getShipping() {
+		return shipping;
+	}
+
+	public void setPaymentGross(double paymentGross) {
+		this.paymentGross = paymentGross;
+	}
+
+	public double getPaymentGross() {
+		return paymentGross;
+	}
+
+	public void setMcCurrency(String mcCurrency) {
+		this.mcCurrency = mcCurrency;
+	}
+
+	public String getMcCurrency() {
+		return mcCurrency;
+	}
+
+	public void setPaymentFee(double paymentFee) {
+		this.paymentFee = paymentFee;
+	}
+
+	public double getPaymentFee() {
+		return paymentFee;
 	}
 	
 	
