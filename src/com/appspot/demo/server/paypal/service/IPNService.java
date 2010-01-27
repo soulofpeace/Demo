@@ -202,12 +202,14 @@ public class IPNService {
 		if(mcGross!=null){
 			paypalTransaction.setMcGross(Double.parseDouble(mcGross));
 		}
+		
 		if(currencyCode!=null){
 			paypalTransaction.setCurrencyCode(currencyCode);
 		}
 		if(mcFee!=null){
 			paypalTransaction.setMcFee(Double.parseDouble(mcFee));
 		}
+		
 		if(shipping!=null){
 			paypalTransaction.setShipping(Double.parseDouble(shipping));
 		}
@@ -256,11 +258,16 @@ public class IPNService {
 				keys.add(invoice.getId());
 				keys.add(paypalTransaction.getId());
 				this.actionLoggerService.log(ActionType.NEWTRANSACTION, ActionSource.PAYPAL, null, keys);
+				if(paypalTransaction.getPaymentStatus()!=null && paypalTransaction.getPaymentStatus().equalsIgnoreCase("Completed")){	
+					this.actionLoggerService.log(ActionType.COMPLETEDTRANSACTION, ActionSource.PAYPAL, null, keys);
+					
+				}
 				return true;
 			}
 			else{
 				return false;
 			}
+			
 		}
 		else{
 			return false;
@@ -300,14 +307,27 @@ public class IPNService {
 		String tax = decoder.get("tax");
 		String shipping = decoder.get("shipping");
 		
-		invoice.setCurrencyCode(currencyCode);
-		invoice.setStatus(status);
-		invoice.setOutstandingBalance(Double.parseDouble(outstandingBalance));
-		invoice.setNextPaymentDate(this.parseDate(nextPaymentDate));
-		invoice.setInitialPaymentAmount(Double.parseDouble(initialPaymentAmount));
-		invoice.setTax(Double.parseDouble(tax));
-		invoice.setShipping(Double.parseDouble(shipping));
-		
+		if(currencyCode!=null){
+			invoice.setCurrencyCode(currencyCode);
+		}
+		if(status!=null){
+			invoice.setStatus(status);
+		}
+		if(outstandingBalance!=null){
+			invoice.setOutstandingBalance(Double.parseDouble(outstandingBalance));
+		}
+		if(nextPaymentDate!=null){
+			invoice.setNextPaymentDate(this.parseDate(nextPaymentDate));
+		}
+		if(initialPaymentAmount!=null){
+			invoice.setInitialPaymentAmount(Double.parseDouble(initialPaymentAmount));
+		}
+		if(tax!=null){
+			invoice.setTax(Double.parseDouble(tax));
+		}
+		if(shipping!=null){
+			invoice.setShipping(Double.parseDouble(shipping));
+		}
 		String invoiceId =this.invoiceDao.saveInvoice(invoice);
 		if(invoiceId!=null){
 			return true;

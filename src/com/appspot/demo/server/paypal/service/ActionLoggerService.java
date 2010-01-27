@@ -2,6 +2,7 @@ package com.appspot.demo.server.paypal.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import com.appspot.demo.server.paypal.model.ActionSource;
 import com.appspot.demo.server.paypal.model.ActionType;
 
 @Service
-public class ActionLoggerService {
+public class ActionLoggerService extends Observable{
 	public static final Logger logger = Logger.getLogger(ActionLoggerService.class.getName());
 	
 	@Autowired
@@ -35,7 +36,11 @@ public class ActionLoggerService {
 		actionLog.setSource(actionSource);
 		actionLog.setType(actionType);
 		actionLog.setKeyList(keys);
-		actionLogDao.saveActionLog(actionLog);
+		String actionLogId = actionLogDao.saveActionLog(actionLog);
+		actionLog.setId(KeyFactory.stringToKey(actionLogId));
+		this.setChanged();
+		this.notifyObservers(actionLog);
+		this.clearChanged();
 	}
 	
 }
