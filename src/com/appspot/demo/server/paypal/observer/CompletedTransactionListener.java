@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
@@ -15,51 +16,64 @@ import com.appspot.demo.server.paypal.model.ActionLog;
 import com.appspot.demo.server.paypal.model.ActionType;
 import com.appspot.demo.server.paypal.model.PaypalTransaction;
 import com.appspot.demo.server.paypal.service.ActionLoggerService;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
+
 
 @Component
 public class CompletedTransactionListener implements Observer{
 	
 	private static Logger logger = Logger.getLogger(CompletedTransactionListener.class.getName());
-	@Autowired
-	private ActionLoggerService actionLoggedService;
-	
-	@Autowired
-	private PersistenceManagerFactory pmf;
-	
-	public CompletedTransactionListener(){}
 
-	public CompletedTransactionListener(ActionLoggerService actionLoggedService){
-		this.actionLoggedService= actionLoggedService;
-		actionLoggedService.addObserver(this);
+	private ActionLoggerService actionLoggerService;
+	
+	@Autowired
+	public CompletedTransactionListener( ActionLoggerService actionLoggerService){
+		logger.info("register observer");
+		logger.info("my name is "+actionLoggerService.name);
+		actionLoggerService.addObserver(this);
 	}
+	
+	/**@PostConstruct
+	public void registerListener(){
+		logger.info("register observer");
+		logger.info("my name is "+actionLoggerService.name);
+		actionLoggerService.addObserver(this);
+	}**/
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		if(o.hasChanged()){
-			if (arg instanceof ActionLog){
-				ActionLog actionLog = (ActionLog)arg;
-				if(actionLog.getType()==ActionType.COMPLETEDTRANSACTION){
-					logger.info("Completed Transaction");
-					PersistenceManager pm = pmf.getPersistenceManager();
-					List<Key> keys = actionLog.getKeyList();
-					try{
-						for(Key key: keys){
-							Object obj = pm.getObjectById(key);
-							if(obj instanceof PaypalTransaction){
-								PaypalTransaction transaction = (PaypalTransaction)obj;
-								logger.info("Transaction "+ transaction.getId()+ " retrieved");
-							}
+		logger.info("Listener Activated");
+	
+		if (arg instanceof ActionLog){
+			logger.info("arg is of actionLog type");
+			ActionLog actionLog = (ActionLog)arg;
+			if(actionLog.getType().equals(ActionType.COMPLETEDTRANSACTION)){
+				logger.info("Completed Transaction");
+				DatastoreService dataStoreService = DatastoreServiceFactory.getDatastoreService();
+				List<Key> keys = actionLog.getKeyList();
+				try{
+					for(Key key: keys){
+						Entity entity = dataStoreService.get(key);
+						logger.info("Entity Kind:"+entity.getKind());
+						if(entity.getKind().equalsIgnoreCase("PaypalTransaction")){
+
+							logger.info("Transaction "+ entity.getKey()+ " retrieved");
 						}
-						
 					}
-					finally{
-						pm.close();
-					}
+					
 				}
+				catch(EntityNotFoundException e){
+					logger.warning(e.getMessage());
+				}
+				
 			}
 		}
 	}
+	
 
 }

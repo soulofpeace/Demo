@@ -40,6 +40,10 @@ public class UserInfoService {
 		}
 	}
 	
+	public boolean isCurrentUserAdmin(){
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.isUserAdmin();
+	}
 	public String getLoginUrl(String requestURL){
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.createLoginURL(requestURL);

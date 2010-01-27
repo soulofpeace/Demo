@@ -68,7 +68,12 @@ public class PaypalAuthFilter implements Filter{
 				appUser.setDateCreated(new Date());
 				appUser.setEmail(this.userInfoService.getCurrentUserEmail());
 				appUser.setUserName(this.userInfoService.getName());
-				appUser.setRole(Role.CUSTOMER);
+				if(!this.userInfoService.isCurrentUserAdmin()){
+					appUser.setRole(Role.CUSTOMER);
+				}
+				else{
+					appUser.setRole(Role.ADMIN);
+				}
 				String keyString = this.appUserDao.saveApplicationUser(appUser);
 				if (keyString != null){
 					List<Key> keys = new ArrayList<Key>();

@@ -258,7 +258,8 @@ public class IPNService {
 				keys.add(invoice.getId());
 				keys.add(paypalTransaction.getId());
 				this.actionLoggerService.log(ActionType.NEWTRANSACTION, ActionSource.PAYPAL, null, keys);
-				if(paypalTransaction.getPaymentStatus()!=null && paypalTransaction.getPaymentStatus().equalsIgnoreCase("Completed")){	
+				if(paypalTransaction.getPaymentStatus()!=null && paypalTransaction.getPaymentStatus().equalsIgnoreCase("Completed")){
+					logger.info("Completed Transaction");
 					this.actionLoggerService.log(ActionType.COMPLETEDTRANSACTION, ActionSource.PAYPAL, null, keys);
 					
 				}
