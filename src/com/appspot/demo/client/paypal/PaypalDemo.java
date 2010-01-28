@@ -11,12 +11,14 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -93,7 +95,9 @@ public class PaypalDemo implements EntryPoint {
 							formPanel.setAction("/demo/paypal/payment/start");
 							formPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
 							Hidden packagekey = new Hidden("packageKey", packages.get(i).getKey());
-							SubmitButton getIt = new SubmitButton("Get It!");
+							PushButton getIt = new PushButton(new Image("https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image&PAL=NNRCSLN9N9366"));
+							
+						
 							getIt.addClickHandler(new ClickHandler() {
 								
 								@Override

@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -29,22 +30,40 @@ public class ConfirmPackage implements EntryPoint {
 		this.getProductPackage(packageKey);
 		RootPanel.get().add(displayTable);
 		
-		final FormPanel formPanel = new FormPanel("_self");
-		formPanel.setMethod(FormPanel.METHOD_GET);
-		formPanel.setAction("/demo/paypal/payment/confirm");
-		formPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
+		final FormPanel submitformPanel = new FormPanel("_self");
+		submitformPanel.setMethod(FormPanel.METHOD_GET);
+		submitformPanel.setAction("/demo/paypal/payment/confirm");
+		submitformPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
+		
+		final FormPanel cancelformPanel = new FormPanel("_self");
+		cancelformPanel.setMethod(FormPanel.METHOD_GET);
+		cancelformPanel.setAction("/demo/paypal/payment/cancel");
+		cancelformPanel.setEncoding(FormPanel.ENCODING_URLENCODED);
+		
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		Button cancelButton = new Button("Cancel");
 		Button confirmButton = new Button("Confirm");
-		formPanel.setWidget(confirmButton);
+		submitformPanel.setWidget(confirmButton);
 		confirmButton.addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
 				// TODO Auto-generated method stub
-				formPanel.submit();
+				submitformPanel.submit();
 			}
 		});
-		
-		RootPanel.get().add(formPanel);
+		cancelformPanel.setWidget(cancelButton);
+		cancelButton.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO Auto-generated method stub
+				cancelformPanel.submit();
+			}
+		});
+		buttonPanel.add(submitformPanel);
+		buttonPanel.add(cancelformPanel);
+		RootPanel.get().add(buttonPanel);
 		
 		
 	}

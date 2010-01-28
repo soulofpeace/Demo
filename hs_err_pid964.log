@@ -1,0 +1,158 @@
+#
+# An unexpected error has been detected by Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x6d8cb418, pid=964, tid=3308
+#
+# Java VM: Java HotSpot(TM) Client VM (10.0-b19 mixed mode, sharing windows-x86)
+# Problematic frame:
+# V  [jvm.dll+0x5b418]
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x02c1f400):  JavaThread "CompilerThread0" daemon [_thread_in_native, id=3308, stack(0x02e80000,0x02ed0000)]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x34000014
+
+Registers:
+EAX=0x00000001, EBX=0x00000022, ECX=0x03012e20, EDX=0x00000023
+ESP=0x02ecf1fc, EBP=0x00000023, ESI=0x03111f40, EDI=0x34000000
+EIP=0x6d8cb418, EFLAGS=0x00010206
+
+Top of Stack: (sp=0x02ecf1fc)
+0x02ecf1fc:   6d8a0000 03111e88 02ecfaa8 6d8a0000
+0x02ecf20c:   6d8cb4be 00000023 03111eb8 00000023
+0x02ecf21c:   6d8a0000 03111d38 03111d38 6d8a1a35
+0x02ecf22c:   6d8a0000 00000000 02ecfad4 6d8a005e
+0x02ecf23c:   6d8a0000 03111d38 00000008 6d8a2385
+0x02ecf24c:   03111d38 00000008 02ecfad4 03066a10
+0x02ecf25c:   02ecfaa8 6d8a23ca 02ecfaa8 02ecfad4
+0x02ecf26c:   00000000 02ecfad4 03066810 02ecfaa8 
+
+Instructions: (pc=0x6d8cb418)
+0x6d8cb408:   85 ed 7e 36 56 8b 74 24 14 57 8b 3e 85 ff 74 20
+0x6d8cb418:   8b 47 14 83 78 08 07 74 17 56 ff 54 24 24 8b 4f 
+
+
+Stack: [0x02e80000,0x02ed0000],  sp=0x02ecf1fc,  free space=316k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x5b418]
+
+
+Current CompileTask:
+C1:731      org.eclipse.jdt.internal.compiler.ClassFile.completeCodeAttribute(I)V (6136 bytes)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x02c21c00 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=3288, stack(0x02ed0000,0x02f20000)]
+=>0x02c1f400 JavaThread "CompilerThread0" daemon [_thread_in_native, id=3308, stack(0x02e80000,0x02ed0000)]
+  0x02c1ac00 JavaThread "Attach Listener" daemon [_thread_blocked, id=3744, stack(0x02e30000,0x02e80000)]
+  0x02c1a000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=4336, stack(0x02de0000,0x02e30000)]
+  0x02c14000 JavaThread "Finalizer" daemon [_thread_blocked, id=2072, stack(0x02d90000,0x02de0000)]
+  0x02c0fc00 JavaThread "Reference Handler" daemon [_thread_blocked, id=760, stack(0x02d40000,0x02d90000)]
+  0x003a8000 JavaThread "main" [_thread_in_Java, id=1252, stack(0x008c0000,0x00910000)]
+
+Other Threads:
+  0x02c0e800 VMThread [stack: 0x02cf0000,0x02d40000] [id=5384]
+  0x02c33c00 WatcherThread [stack: 0x02f20000,0x02f70000] [id=2164]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 2304K, used 1037K [0x06990000, 0x06c10000, 0x090f0000)
+  eden space 2048K,  38% used [0x06990000, 0x06a53490, 0x06b90000)
+  from space 256K, 100% used [0x06b90000, 0x06bd0000, 0x06bd0000)
+  to   space 256K,   0% used [0x06bd0000, 0x06bd0000, 0x06c10000)
+ tenured generation   total 30156K, used 22431K [0x090f0000, 0x0ae63000, 0x26990000)
+   the space 30156K,  74% used [0x090f0000, 0x0a6d7ff0, 0x0a6d8000, 0x0ae63000)
+ compacting perm gen  total 12288K, used 6041K [0x26990000, 0x27590000, 0x2a990000)
+   the space 12288K,  49% used [0x26990000, 0x26f76498, 0x26f76600, 0x27590000)
+    ro space 8192K,  66% used [0x2a990000, 0x2aee0c80, 0x2aee0e00, 0x2b190000)
+    rw space 12288K,  52% used [0x2b190000, 0x2b7e03d0, 0x2b7e0400, 0x2bd90000)
+
+Dynamic libraries:
+0x00400000 - 0x00423000 	C:\Program Files\Java\jdk1.6.0_04\bin\javaw.exe
+0x7c900000 - 0x7c9b2000 	C:\WINDOWS\system32\ntdll.dll
+0x7c800000 - 0x7c8f6000 	C:\WINDOWS\system32\kernel32.dll
+0x77dd0000 - 0x77e6b000 	C:\WINDOWS\system32\ADVAPI32.dll
+0x77e70000 - 0x77f02000 	C:\WINDOWS\system32\RPCRT4.dll
+0x77fe0000 - 0x77ff1000 	C:\WINDOWS\system32\Secur32.dll
+0x7e410000 - 0x7e4a1000 	C:\WINDOWS\system32\USER32.dll
+0x77f10000 - 0x77f59000 	C:\WINDOWS\system32\GDI32.dll
+0x76390000 - 0x763ad000 	C:\WINDOWS\system32\IMM32.DLL
+0x629c0000 - 0x629c9000 	C:\WINDOWS\system32\LPK.DLL
+0x74d90000 - 0x74dfb000 	C:\WINDOWS\system32\USP10.dll
+0x7c340000 - 0x7c396000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\msvcr71.dll
+0x6d870000 - 0x6dac0000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\client\jvm.dll
+0x76b40000 - 0x76b6d000 	C:\WINDOWS\system32\WINMM.dll
+0x6d320000 - 0x6d328000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\hpi.dll
+0x76bf0000 - 0x76bfb000 	C:\WINDOWS\system32\PSAPI.DLL
+0x6d820000 - 0x6d82c000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\verify.dll
+0x6d3c0000 - 0x6d3df000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\java.dll
+0x6d860000 - 0x6d86f000 	C:\Program Files\Java\jdk1.6.0_04\jre\bin\zip.dll
+0x67600000 - 0x67609000 	C:\Applications\EclipseAll\eclipse3.5\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.0.0_2.0.0.v200912062003\gwt-2.0.0\gwt-ll.dll
+0x3d930000 - 0x3da16000 	C:\WINDOWS\system32\wininet.dll
+0x77c10000 - 0x77c68000 	C:\WINDOWS\system32\msvcrt.dll
+0x77f60000 - 0x77fd6000 	C:\WINDOWS\system32\SHLWAPI.dll
+0x035c0000 - 0x035c9000 	C:\WINDOWS\system32\Normaliz.dll
+0x78130000 - 0x78262000 	C:\WINDOWS\system32\urlmon.dll
+0x774e0000 - 0x7761d000 	C:\WINDOWS\system32\ole32.dll
+0x77120000 - 0x771ab000 	C:\WINDOWS\system32\OLEAUT32.dll
+0x3dfd0000 - 0x3e1b8000 	C:\WINDOWS\system32\iertutil.dll
+0x773d0000 - 0x774d3000 	C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.5512_x-ww_35d4ce83\comctl32.dll
+0x7c9c0000 - 0x7d1d7000 	C:\WINDOWS\system32\SHELL32.dll
+0x5d090000 - 0x5d12a000 	C:\WINDOWS\system32\comctl32.dll
+0x71ab0000 - 0x71ac7000 	C:\WINDOWS\system32\ws2_32.dll
+0x71aa0000 - 0x71aa8000 	C:\WINDOWS\system32\WS2HELP.dll
+0x76ee0000 - 0x76f1c000 	C:\WINDOWS\system32\RASAPI32.dll
+0x76e90000 - 0x76ea2000 	C:\WINDOWS\system32\rasman.dll
+0x5b860000 - 0x5b8b5000 	C:\WINDOWS\system32\NETAPI32.dll
+0x76eb0000 - 0x76edf000 	C:\WINDOWS\system32\TAPI32.dll
+0x76e80000 - 0x76e8e000 	C:\WINDOWS\system32\rtutils.dll
+0x769c0000 - 0x76a74000 	C:\WINDOWS\system32\USERENV.dll
+0x722b0000 - 0x722b5000 	C:\WINDOWS\system32\sensapi.dll
+0x77c70000 - 0x77c94000 	C:\WINDOWS\system32\msv1_0.dll
+0x76d60000 - 0x76d79000 	C:\WINDOWS\system32\iphlpapi.dll
+0x71a50000 - 0x71a8f000 	C:\WINDOWS\System32\mswsock.dll
+0x76fc0000 - 0x76fc6000 	C:\WINDOWS\system32\rasadhlp.dll
+0x76f20000 - 0x76f47000 	C:\WINDOWS\system32\DNSAPI.dll
+0x662b0000 - 0x66308000 	C:\WINDOWS\system32\hnetcfg.dll
+0x71a90000 - 0x71a98000 	C:\WINDOWS\System32\wshtcpip.dll
+
+VM Arguments:
+jvm_args: -Xmx512m -Xmx512m 
+java_command: com.google.gwt.dev.Compiler -logLevel INFO -style DETAILED -war L:\Personal\Project\Demo\war com.appspot.demo.CancelledTransaction com.appspot.demo.ConfirmPackage com.appspot.demo.Paypal com.appspot.demo.PaypalPackage com.appspot.demo.PaypalSuccess com.appspot.demo.ViewPackage
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.6.0_04
+CLASSPATH=.;C:\Program Files\Java\jre1.6.0_04\lib\ext\QTJava.zip
+PATH=C:/Program Files/Java/jre6/bin/client;C:/Program Files/Java/jre6/bin;C:\Applications\Oracle11g\admin\product\11.1.0\client_2\bin;c:\ruby\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Applications\Scite\wscite176\wscite;C:\Applications\Maven\maven-2.0.7\bin;C:\Applications\EclipseAll\eclipse;C:\Application\cygwin\bin\;C:\Program Files\MySQL\MySQL Server 5.0\bin;C:\Applications\cygwin\;C:\Program Files\Vim\vim71;C:\Program Files\MySQL\MySQL Server 5.0\bin;C:\Applications\bin;C:\Python25;C:\Python25\Scripts;C:\Applications\cygwin\bin;C:\Applications\gnuplot\gnuplot\bin;C:\Applications\console\Console-2.00b122-Beta\Console2;C:\Program Files\Java\jdk1.6.0_04\bin;"C:\Documents and Settings\choonkee\Local Settings\Application Data\Google\Chrome\Application\";C:\Program Files\TortoiseSVN\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Claws\pub;C:\Program Files\Google\google_appengine\
+USERNAME=choonkee
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 15 Stepping 13, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows XP Build 2600 Service Pack 3
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 15 stepping 13, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3
+
+Memory: 4k page, physical 2052644k(928068k free), swap 3948112k(2913584k free)
+
+vm_info: Java HotSpot(TM) Client VM (10.0-b19) for windows-x86 JRE (1.6.0_04-b12), built on Dec 14 2007 00:51:20 by "java_re" with MS VC++ 7.1
+
+time: Thu Jan 28 16:40:58 2010
+elapsed time: 8 seconds
+
