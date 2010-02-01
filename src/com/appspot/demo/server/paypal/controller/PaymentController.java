@@ -143,9 +143,9 @@ public class PaymentController {
 				if(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId())==null){
 					String customerId= this.customerDao.savePaypalCustomer(customer);
 					customer= this.customerDao.getPaypalCustomerById(customerId);
-					customer.getAppUser().add(appUser.getId());
+					customer.addAppUser(appUser.getId());
 					this.customerDao.savePaypalCustomer(customer);
-					appUser.getPaypalCustomers().add(customer.getId());
+					appUser.addCustomer(customer.getId());
 					String appUserId  = this.appUserDao.saveApplicationUser(appUser);
 					session.setAttribute("customerId", customerId);
 					if (customerId!=null){
@@ -169,9 +169,9 @@ public class PaymentController {
 				}
 				else{
 					customer= this.customerDao.getPaypalCustomerByPaypalId(customer.getPayerId());
-					customer.getAppUser().add(appUser.getId());
+					customer.addAppUser(appUser.getId());
 					this.customerDao.savePaypalCustomer(customer);
-					appUser.getPaypalCustomers().add(customer.getId());
+					appUser.addCustomer(customer.getId());
 					String appUserId  = this.appUserDao.saveApplicationUser(appUser);
 					String customerId = KeyFactory.keyToString(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId()).getId());
 					session.setAttribute("customerId", customerId);

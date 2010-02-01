@@ -1,6 +1,8 @@
 package com.appspot.demo.server.paypal.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
@@ -10,7 +12,9 @@ import javax.jdo.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.appspot.demo.server.paypal.model.AppUserPaypalCustomer;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
+import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -81,6 +85,76 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 			pm.close();
 		
 		}
+	}
+
+	@Override
+	public void addPaypalCustomer(PaypalApplicationUser applicationUser,
+			PaypalCustomer paypalCustomer) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(AppUserPaypalCustomer.class);
+			query.setFilter("appUser == appUserParam");
+			query.declareParameters("PaypalApplicationUser appUserParam");
+			query.setUnique(true);
+			AppUserPaypalCustomer appUserPaypalCustomer = (AppUserPaypalCustomer)query.execute(applicationUser);
+			if(appUserPaypalCustomer!=null){
+				logger.info("Existing appUserPaypalCustomer found");
+				appUserPaypalCustomer.getPaypalCustomers().add(paypalCustomer.getId());
+				pm.makePersistent(appUserPaypalCustomer);
+			}
+			else{
+				logger.info("New appUserPaypalCustomer");
+				appUserPaypalCustomer = new AppUserPaypalCustomer();
+				appUserPaypalCustomer.getPaypalCustomers().add(paypalCustomer.getId());
+				applicationUser.setAppUserPaypalCustomer(appUserPaypalCustomer);
+				pm.makePersistent(applicationUser);
+				
+			}
+			pm.currentTransaction().commit();
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				logger.info("Unable to commit changes");
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+		
+	}
+
+	@Override
+	public List<PaypalCustomer> getPaypalCustomer(
+			PaypalApplicationUser applicationUser) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		List<PaypalCustomer> customers = new ArrayList<PaypalCustomer>();
+		try{
+			Query query = pm.newQuery(AppUserPaypalCustomer.class);
+			query.setFilter("appUser == appUserParam");
+			query.declareParameters("PaypalApplicationUser appUserParam");
+			query.setUnique(true);
+			AppUserPaypalCustomer appUserPaypalCustomer =(AppUserPaypalCustomer)query.execute(applicationUser);
+			if(appUserPaypalCustomer!=null){
+				logger.info("Found appUserPaypalCustomer");
+				Set<Key> customerKeys = appUserPaypalCustomer.getPaypalCustomers();
+				for(Key key:customerKeys){
+					customers.add(pm.detachCopy(pm.getObjectById(PaypalCustomer.class, key)));
+				}
+			}
+			pm.currentTransaction().commit();
+			return customers;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				logger.info("Transaction failed to commit");
+				pm.currentTransaction().commit();
+			}
+			pm.close();
+		}
+		
 	}
 
 }

@@ -129,10 +129,6 @@ public class PaypalTransaction {
 	private double paymentGross;
 	
 	
-	//Paypal CancelledTransation & Paypal Profile Created
-	@Persistent
-	private String comment;
-	
 	//Paypal CancelledTransaction
 	private Key paypalApplicationUser;
 	
@@ -370,13 +366,6 @@ public class PaypalTransaction {
 		return paymentItemOptionValue;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getComment() {
-		return comment;
-	}
 
 	public void setPaypalApplicationUser(Key paypalApplicationUser) {
 		this.paypalApplicationUser = paypalApplicationUser;

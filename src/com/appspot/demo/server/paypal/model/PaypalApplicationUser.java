@@ -1,6 +1,8 @@
 package com.appspot.demo.server.paypal.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -29,9 +31,15 @@ public class PaypalApplicationUser {
 	@Persistent
 	private Role role;
 	
+	/**
 	@Persistent
 	private Set<Key> paypalCustomers;
-
+	**/
+	
+	
+	@Persistent
+	private AppUserPaypalCustomer AppUserPaypalCustomer; 
+	
 	public void setId(Key id) {
 		this.id = id;
 	}
@@ -72,6 +80,7 @@ public class PaypalApplicationUser {
 		return role;
 	}
 
+	/**
 	public void setPaypalCustomers(Set<Key> paypalCustomers) {
 		this.paypalCustomers = paypalCustomers;
 	}
@@ -79,7 +88,17 @@ public class PaypalApplicationUser {
 	public Set<Key> getPaypalCustomers() {
 		return paypalCustomers;
 	}
+	**/
+
+	public void setAppUserPaypalCustomer(AppUserPaypalCustomer appUserPaypalCustomer) {
+		AppUserPaypalCustomer = appUserPaypalCustomer;
+	}
+
+	public AppUserPaypalCustomer getAppUserPaypalCustomer() {
+		return AppUserPaypalCustomer;
+	}
 	
+
 	
 
 }

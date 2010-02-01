@@ -251,7 +251,7 @@ public class IPNService {
 		paypalTransaction.setInvoiceId(invoice.getId());
 		String transactionId= this.paypalTransactionDao.savePaypalTransaction(paypalTransaction);
 		if(transactionId!=null){
-			invoice.getTransactions().add(KeyFactory.stringToKey(transactionId));
+			invoice.addTransaction(KeyFactory.stringToKey(transactionId));
 			String invoiceId = this.invoiceDao.saveInvoice(invoice);
 			if(invoiceId!=null){
 				List<Key> keys = new ArrayList<Key>();
