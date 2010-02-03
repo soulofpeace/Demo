@@ -8,6 +8,6 @@ import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 public interface InvoiceDao {
 	public Invoice getInvoiceById(String id);
 	public String saveInvoice(Invoice invoice);
-	public String saveInvoice(PaypalCustomer customer, RecurringProductPackage productPackage, Invoice invoice, PaypalApplicationUser appUser);
+	//public String saveInvoice(PaypalCustomer customer, RecurringProductPackage productPackage, Invoice invoice, PaypalApplicationUser appUser);
 	public Invoice getInvoiceByProfileId(String profileId);
 }

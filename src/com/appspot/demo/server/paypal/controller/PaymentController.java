@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.appspot.demo.server.paypal.dao.CancelledTransactionDao;
+
 import com.appspot.demo.server.paypal.dao.InvoiceDao;
 import com.appspot.demo.server.paypal.dao.PackageDao;
 import com.appspot.demo.server.paypal.dao.PaypalApplicationUserDao;
@@ -24,7 +24,6 @@ import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 
 import com.appspot.demo.server.paypal.model.ActionSource;
 import com.appspot.demo.server.paypal.model.ActionType;
-import com.appspot.demo.server.paypal.model.CancelledTransaction;
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
@@ -67,8 +66,6 @@ public class PaymentController {
 	@Autowired
 	private ActionLoggerService actionLoggerService;
 	
-	@Autowired
-	private CancelledTransactionDao cancelledTransactionDao;
 	
 	private static final String createURL="http://choonkeedemo.appspot.com/demo/paypal/payment/create";
 	
@@ -211,7 +208,10 @@ public class PaymentController {
 			PaypalApplicationUser appUser = this.userInfoService.getCurrentApplicationUser();
 			Invoice invoice = this.paypalService.createRecurringPaymentsProfile(customer, productPackage, paypalToken);
 			if (invoice !=null){
-				String invoiceId =this.invoiceDao.saveInvoice(customer, productPackage, invoice, appUser);
+				invoice.setAppUser(appUser.getId());
+				invoice.setProductPackageId(productPackage.getId());
+				invoice.setCustomerId(customer.getId());
+				String invoiceId =this.invoiceDao.saveInvoice(invoice);
 				if(invoiceId !=null){
 					logger.info("profile Id is "+invoice.getPaypalRecurringPaymentProfileId());
 					this.sendConfirmationEmail(productPackage);

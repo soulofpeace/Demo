@@ -54,8 +54,8 @@ public class Invoice {
 	@Persistent
 	private double shipping;
 	
-	@Persistent
-	private List<Key> transactions = new ArrayList<Key>();
+	//@Persistent
+	//private List<Key> transactions = new ArrayList<Key>();
 	
 	@Persistent
 	private Key appUser;
@@ -134,7 +134,7 @@ public class Invoice {
 	public String getStatus() {
 		return status;
 	}
-
+/**
 	public void setTransactions(List<Key> transactions) {
 		this.transactions = transactions;
 	}
@@ -142,7 +142,8 @@ public class Invoice {
 	public List<Key> getTransactions() {
 		return transactions;
 	}
-
+**/
+	
 	public void setCurrencyCode(String currencyCode) {
 		this.currencyCode = currencyCode;
 	}

@@ -10,7 +10,9 @@ import javax.jdo.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.appspot.demo.server.paypal.model.AppUserCustomer;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
+import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -81,6 +83,69 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 			pm.close();
 		
 		}
+	}
+
+	@Override
+	public boolean addPaypalCustomertoApplicationUser(PaypalCustomer customer,
+			PaypalApplicationUser applicationUser) {
+		// TODO Auto-generated method stub
+		AppUserCustomer appUserCustomer = this.getAppUserCustomer(applicationUser);
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			if (appUserCustomer!=null){
+				appUserCustomer.getCustomers().add(customer.getId());
+				appUserCustomer = pm.makePersistent(appUserCustomer);
+			}
+			else{
+				appUserCustomer = new AppUserCustomer();
+				appUserCustomer.getCustomers().add(customer.getId());
+				applicationUser.setAppUserCustomer(appUserCustomer);
+				applicationUser = pm.makePersistent(applicationUser);
+				appUserCustomer = applicationUser.getAppUserCustomer();
+			}
+			pm.currentTransaction().commit();
+			if(appUserCustomer.getId()!=null){
+				return true;
+			}
+			else{
+				return false;
+			}
+			
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+	
+	
+	private AppUserCustomer getAppUserCustomer(PaypalApplicationUser paypalApplicationUser){
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(AppUserCustomer.class);
+			query.setFilter("appUser == appUserParam");
+			query.declareParameters("PaypalApplicationUser appUserParam");
+			query.setUnique(true);
+			AppUserCustomer appUserCustomer = (AppUserCustomer)query.execute(paypalApplicationUser);
+			pm.currentTransaction().commit();
+			if(appUserCustomer!=null){
+				return pm.detachCopy(appUserCustomer);
+			}
+			else{
+				return null;
+			}
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+			
 	}
 
 }

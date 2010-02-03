@@ -30,7 +30,12 @@ public class PaypalApplicationUser {
 	private Role role;
 	
 	@Persistent
+	private AppUserCustomer appUserCustomer;
+	
+	/**
+	@Persistent
 	private Set<Key> paypalCustomers;
+	**/
 
 	public void setId(Key id) {
 		this.id = id;
@@ -72,6 +77,15 @@ public class PaypalApplicationUser {
 		return role;
 	}
 
+	public void setAppUserCustomer(AppUserCustomer appUserCustomer) {
+		this.appUserCustomer = appUserCustomer;
+	}
+
+	public AppUserCustomer getAppUserCustomer() {
+		return appUserCustomer;
+	}
+
+	/**
 	public void setPaypalCustomers(Set<Key> paypalCustomers) {
 		this.paypalCustomers = paypalCustomers;
 	}
@@ -79,6 +93,7 @@ public class PaypalApplicationUser {
 	public Set<Key> getPaypalCustomers() {
 		return paypalCustomers;
 	}
+	**/
 	
 	
 

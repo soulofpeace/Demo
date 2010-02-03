@@ -74,14 +74,15 @@ public class PaypalCustomer {
 	@Persistent
 	private String shipToCountryCode;
 	
-	@Persistent
-	private List<Key> invoiceKeys = new ArrayList<Key>();
+	//@Persistent
+	//private List<Key> invoiceKeys = new ArrayList<Key>();
 	
 	@Persistent
 	private Date dateCreated;
 	
-	@Persistent(defaultFetchGroup = "true")
-	private Set<Key> appUsers;
+	//@Persistent(defaultFetchGroup = "true")
+	//private Set<Key> appUsers;
+	
 
 	public void setPayerId(String payerId) {
 		this.payerId = payerId;
@@ -227,6 +228,7 @@ public class PaypalCustomer {
 		return shipToCountryCode;
 	}
 	
+	/**
 	public List<Key> getInvoiceKeys(){
 		return this.invoiceKeys;
 	}
@@ -234,6 +236,7 @@ public class PaypalCustomer {
 	public void setInvoices(List<Key> invoiceKeys){
 		this.invoiceKeys = invoiceKeys;
 	}
+	**/
 
 	public void setId(Key id) {
 		this.id = id;
@@ -251,6 +254,7 @@ public class PaypalCustomer {
 		return dateCreated;
 	}
 
+	/**
 	public void setAppUser(Set<Key> appUsers) {
 		this.appUsers = appUsers;
 	}
@@ -258,5 +262,6 @@ public class PaypalCustomer {
 	public Set<Key> getAppUser() {
 		return appUsers;
 	}
+	**/
 
 }

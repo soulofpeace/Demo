@@ -41,8 +41,8 @@ public class RecurringProductPackage {
 	@Persistent 
 	private int billingFrequency;
 	
-	@Persistent
-	private List<Key> invoiceKeys = new ArrayList<Key>();
+	//@Persistent
+	//private List<Key> invoiceKeys = new ArrayList<Key>();
 	
 	@Persistent
 	private Date getDateCreated;
@@ -96,6 +96,7 @@ public class RecurringProductPackage {
 		return this.billingPeriod;
 	}
 	
+/**
 	public List<Key> getInvoiceKeys(){
 		return this.invoiceKeys;
 	}
@@ -103,7 +104,7 @@ public class RecurringProductPackage {
 	public void setInvoiceKeys(List<Key> invoiceKeys){
 		this.invoiceKeys =invoiceKeys;
 	}
-
+**/
 	public void setBillingFrequency(int billingFrequency) {
 		this.billingFrequency = billingFrequency;
 	}

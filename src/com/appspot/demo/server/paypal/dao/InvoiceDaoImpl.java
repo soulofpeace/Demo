@@ -41,26 +41,27 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		
 	}
 
+	/**
 	@Override
-	public String saveInvoice(PaypalCustomer customer, RecurringProductPackage productPackage, Invoice invoice, PaypalApplicationUser appUser) {
+	public String saveInvoice(Invoice invoice) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try{
-			invoice.setCustomerId(customer.getId());
-			invoice.setProductPackageId(productPackage.getId());
-			invoice.setAppUser(appUser.getId());
+			//invoice.setCustomerId(customer.getId());
+			//invoice.setProductPackageId(productPackage.getId());
+			//invoice.setAppUser(appUser.getId());
 			invoice= pm.makePersistent(invoice);
-			customer.getInvoiceKeys().add(invoice.getId());
-			pm.makePersistent(customer);
-			productPackage.getInvoiceKeys().add(invoice.getId());
-			pm.makePersistent(productPackage);
+			//customer.getInvoiceKeys().add(invoice.getId());
+			//pm.makePersistent(customer);
+			//productPackage.getInvoiceKeys().add(invoice.getId());
+			//pm.makePersistent(productPackage);
 			return KeyFactory.keyToString(invoice.getId());
 		}
 		finally{
 			pm.close();
 		}
 	}
-	
+	**/
 	
 	
 
