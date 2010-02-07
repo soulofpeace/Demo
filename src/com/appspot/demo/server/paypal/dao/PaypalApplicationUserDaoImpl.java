@@ -72,8 +72,10 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
-			AppUserCustomer appUserCustomer = new AppUserCustomer();
-			applicationUser.setAppUserCustomer(appUserCustomer);
+			if(applicationUser.getAppUserCustomer()==null){
+				AppUserCustomer appUserCustomer = new AppUserCustomer();
+				applicationUser.setAppUserCustomer(appUserCustomer);
+			}
 			applicationUser = pm.makePersistent(applicationUser);
 			pm.currentTransaction().commit();
 			return KeyFactory.keyToString(applicationUser.getId());

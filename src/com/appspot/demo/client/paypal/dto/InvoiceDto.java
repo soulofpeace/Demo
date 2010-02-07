@@ -9,7 +9,7 @@ public class InvoiceDto {
 	
 	private String customerId;
 	
-	private String customerName;
+	private String customerEmail;
 	
 	private String productPackageId;
 	
@@ -35,11 +35,10 @@ public class InvoiceDto {
 	
 	private String shipping;
 	
-	private List<String> transactions;
-	
 	private String appUserId;
 	
-	private String appUserName;
+	
+	
 
 	public void setKey(String key) {
 		this.key = key;
@@ -146,13 +145,6 @@ public class InvoiceDto {
 		return shipping;
 	}
 
-	public void setTransactions(List<String> transactions) {
-		this.transactions = transactions;
-	}
-
-	public List<String> getTransactions() {
-		return transactions;
-	}
 
 	public void setAppUserId(String appUserId) {
 		this.appUserId = appUserId;
@@ -162,12 +154,12 @@ public class InvoiceDto {
 		return appUserId;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	public String getCustomerEmail() {
+		return customerEmail;
 	}
 
 	public void setProductPackageName(String productPackageName) {
@@ -178,12 +170,6 @@ public class InvoiceDto {
 		return productPackageName;
 	}
 
-	public void setAppUserName(String appUserName) {
-		this.appUserName = appUserName;
-	}
-
-	public String getAppUserName() {
-		return appUserName;
-	}
+	
 
 }

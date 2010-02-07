@@ -114,7 +114,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		try{
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("customerId == customerIdParam");
-			query.declareParameters("Key customerIdParam");
+			query.declareParameters("com.google.appengine.api.datastore.Key customerIdParam");
 			Collection<Invoice> invoices =pm.detachCopyAll((Collection<Invoice>) query.execute(customer.getId()));
 			pm.currentTransaction().commit();
 			return invoices;
@@ -137,7 +137,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		try{
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("productPackageId == productPackageIdParam");
-			query.declareParameters("Key productPackageIdParam");
+			query.declareParameters("com.google.appengine.api.datastore.Key productPackageIdParam");
 			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice> )query.execute(productPackage.getId()));
 			pm.currentTransaction().commit();
 			return invoices;
@@ -159,7 +159,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		try{
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("appUser == appUserParam");
-			query.declareParameters("Key appUserParam");
+			query.declareParameters("com.google.appengine.api.datastore.Key appUserParam");
 			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute(appUser.getId()));
 			pm.currentTransaction().commit();
 			return invoices;

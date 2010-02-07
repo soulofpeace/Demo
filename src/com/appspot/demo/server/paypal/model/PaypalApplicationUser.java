@@ -29,7 +29,7 @@ public class PaypalApplicationUser {
 	@Persistent
 	private Role role;
 	
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private AppUserCustomer appUserCustomer;
 	
 	/**

@@ -22,7 +22,7 @@ public class AppUserCustomer {
 	private PaypalApplicationUser appUser;
 	
 	@Persistent
-	private Set<Key> customers = new HashSet<Key>();
+	private Set<Key> customers;
 
 	public void setId(Key id) {
 		this.id = id;
