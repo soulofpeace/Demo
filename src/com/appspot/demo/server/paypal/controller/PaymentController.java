@@ -140,11 +140,14 @@ public class PaymentController {
 				if(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId())==null){
 					String customerId= this.customerDao.savePaypalCustomer(customer);
 					customer= this.customerDao.getPaypalCustomerById(customerId);
-					customer.getAppUser().add(appUser.getId());
+					//customer.getAppUser().add(appUser.getId());
 					this.customerDao.savePaypalCustomer(customer);
-					appUser.getPaypalCustomers().add(customer.getId());
+					//appUser.getPaypalCustomers().add(customer.getId());
 					String appUserId  = this.appUserDao.saveApplicationUser(appUser);
+					appUser.setId(KeyFactory.stringToKey(appUserId));
 					session.setAttribute("customerId", customerId);
+					boolean sucess = this.appUserDao.addPaypalCustomertoApplicationUser(customer, appUser);
+					logger.info("adding customer to application "+sucess);
 					if (customerId!=null){
 						List<Key> keys = new ArrayList<Key>();
 						keys.add(this.userInfoService.getCurrentApplicationUser().getId());
@@ -166,11 +169,13 @@ public class PaymentController {
 				}
 				else{
 					customer= this.customerDao.getPaypalCustomerByPaypalId(customer.getPayerId());
-					customer.getAppUser().add(appUser.getId());
+					//customer.getAppUser().add(appUser.getId());
 					this.customerDao.savePaypalCustomer(customer);
-					appUser.getPaypalCustomers().add(customer.getId());
+					//appUser.getPaypalCustomers().add(customer.getId());
 					String appUserId  = this.appUserDao.saveApplicationUser(appUser);
+					appUser.setId(KeyFactory.stringToKey(appUserId));
 					String customerId = KeyFactory.keyToString(customerDao.getPaypalCustomerByPaypalId(customer.getPayerId()).getId());
+					this.appUserDao.addPaypalCustomertoApplicationUser(customer, appUser);
 					session.setAttribute("customerId", customerId);
 				}
 			

@@ -13,10 +13,11 @@
         </bean>
         
         <bean id="apiCredential" class="com.appspot.demo.server.paypal.service.util.APICredential">
-        	<property name="user" value="social_1264232871_biz_api1.socialwok.com"/>
-        	<property name="password" value="1264232877" />
+        	<property name="user" value="paypal_1264936091_biz_api1.socialwok.com"/>
+        	<property name="password" value="1264936097" />
         	<property name="version" value="56.0" />
-        	<property name="signature" value="AGaZ3BIfuB-.fAkGXZTdFJwunQKDAC627GULQETp0H0ms3LZmGsvriwZ"/>
+        	<property name="signature" value="AM9j5BALcy1BzM8.cYJvfe4exHF9A8NL0DXXMfE4ZPEKgMj5ewETe7X3"/>
+        	<property name="email" value="paypal_1264936091_biz@socialwok.com"/>
         </bean>
         
         <bean id="paypalCallerService" class="com.appspot.demo.server.paypal.service.util.PaypalCallerService">
@@ -26,7 +27,7 @@
         
         <bean id="paypalIPNVerifier" class="com.appspot.demo.server.paypal.service.util.PaypalIPNVerifier">
         	<property name="paypalIPNServer" value="https://www.sandbox.paypal.com/cgi-bin/webscr"/>
-        	<property name="sellerEmail" value="social_1264232871_biz@socialwok.com"/>
+        	<property name="apiCredential" ref="apiCredential"/>
         </bean>
         
         <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">

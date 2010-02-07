@@ -1,5 +1,6 @@
 package com.appspot.demo.server.paypal.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -103,5 +104,74 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			pm.close();
 		}
 	}
+
+	@Override
+	public Collection<Invoice> getInvoiceByCustomer(PaypalCustomer customer) {
+		// TODO Auto-generated method stub
+		
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(Invoice.class);
+			query.setFilter("customerId == customerIdParam");
+			query.declareParameters("Key customerIdParam");
+			Collection<Invoice> invoices =pm.detachCopyAll((Collection<Invoice>) query.execute(customer.getId()));
+			pm.currentTransaction().commit();
+			return invoices;
+			
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceByPackage(
+			RecurringProductPackage productPackage) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(Invoice.class);
+			query.setFilter("productPackageId == productPackageIdParam");
+			query.declareParameters("Key productPackageIdParam");
+			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice> )query.execute(productPackage.getId()));
+			pm.currentTransaction().commit();
+			return invoices;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+		
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceByAppUser(PaypalApplicationUser appUser) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(Invoice.class);
+			query.setFilter("appUser == appUserParam");
+			query.declareParameters("Key appUserParam");
+			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute(appUser.getId()));
+			pm.currentTransaction().commit();
+			return invoices;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+	
+	
 
 }

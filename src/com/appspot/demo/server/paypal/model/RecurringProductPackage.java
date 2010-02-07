@@ -45,7 +45,7 @@ public class RecurringProductPackage {
 	//private List<Key> invoiceKeys = new ArrayList<Key>();
 	
 	@Persistent
-	private Date getDateCreated;
+	private Date dateCreated;
 	
 
 	public void setId(Key id) {
@@ -121,12 +121,12 @@ public class RecurringProductPackage {
 		return moreInformation;
 	}
 
-	public void setGetDateCreated(Date getDateCreated) {
-		this.getDateCreated = getDateCreated;
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
-	public Date getGetDateCreated() {
-		return getDateCreated;
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
 	

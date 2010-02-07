@@ -72,6 +72,8 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
+			AppUserCustomer appUserCustomer = new AppUserCustomer();
+			applicationUser.setAppUserCustomer(appUserCustomer);
 			applicationUser = pm.makePersistent(applicationUser);
 			pm.currentTransaction().commit();
 			return KeyFactory.keyToString(applicationUser.getId());
@@ -89,21 +91,14 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 	public boolean addPaypalCustomertoApplicationUser(PaypalCustomer customer,
 			PaypalApplicationUser applicationUser) {
 		// TODO Auto-generated method stub
+		logger.info("adding application user "+applicationUser.getEmail()+" to customer "+customer.getPayerEmail());
 		AppUserCustomer appUserCustomer = this.getAppUserCustomer(applicationUser);
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
-			if (appUserCustomer!=null){
-				appUserCustomer.getCustomers().add(customer.getId());
-				appUserCustomer = pm.makePersistent(appUserCustomer);
-			}
-			else{
-				appUserCustomer = new AppUserCustomer();
-				appUserCustomer.getCustomers().add(customer.getId());
-				applicationUser.setAppUserCustomer(appUserCustomer);
-				applicationUser = pm.makePersistent(applicationUser);
-				appUserCustomer = applicationUser.getAppUserCustomer();
-			}
+		
+			appUserCustomer.getCustomers().add(customer.getId());
+			appUserCustomer = pm.makePersistent(appUserCustomer);
 			pm.currentTransaction().commit();
 			if(appUserCustomer.getId()!=null){
 				return true;
@@ -116,6 +111,7 @@ public class PaypalApplicationUserDaoImpl implements PaypalApplicationUserDao {
 		finally{
 			if(pm.currentTransaction().isActive()){
 				pm.currentTransaction().rollback();
+				logger.info("Rolling Back Transaction");
 			}
 			pm.close();
 		}

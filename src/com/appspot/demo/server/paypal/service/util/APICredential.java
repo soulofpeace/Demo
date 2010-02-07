@@ -6,6 +6,7 @@ public class APICredential {
 	private String version="";
 	private String signature="";
 	private String subject="";
+	private String email="";
 	
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -36,6 +37,12 @@ public class APICredential {
 	}
 	public String getSignature() {
 		return signature;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getEmail() {
+		return email;
 	}
 	
 

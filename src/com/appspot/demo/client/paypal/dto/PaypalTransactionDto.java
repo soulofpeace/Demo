@@ -76,6 +76,8 @@ public class PaypalTransactionDto {
 	private String shipping;
 	
 	private String paymentGross;
+	
+	private String paymentStatus;
 
 	public void setKey(String key) {
 		this.key = key;
@@ -363,6 +365,14 @@ public class PaypalTransactionDto {
 
 	public String getPaymentGross() {
 		return paymentGross;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
 	}
 	
 	

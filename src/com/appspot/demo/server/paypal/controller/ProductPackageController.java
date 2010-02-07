@@ -1,6 +1,7 @@
 package com.appspot.demo.server.paypal.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -89,6 +90,7 @@ public class ProductPackageController {
 		productPackage.setPackageCost(packageCost);
 		productPackage.setBillingFrequency(billingFrequency);
 		productPackage.setBillingPeriod(billingPeriod);
+		productPackage.setDateCreated(new Date());
 		String productPackageId = packageDao.savePackage(productPackage);
 		if(productPackageId!=null){
 			List<Key> keys = new ArrayList<Key>();

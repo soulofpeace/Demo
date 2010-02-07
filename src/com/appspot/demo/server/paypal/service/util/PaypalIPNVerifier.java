@@ -17,7 +17,7 @@ public class PaypalIPNVerifier {
 	
 	private String paypalIPNServer;
 	
-	private String sellerEmail;
+	private APICredential apiCredential;
 
 	public void setPaypalIPNServer(String paypalIPNServer) {
 		this.paypalIPNServer = paypalIPNServer;
@@ -27,13 +27,14 @@ public class PaypalIPNVerifier {
 		return paypalIPNServer;
 	}
 
-	public void setSellerEmail(String sellerEmail) {
-		this.sellerEmail = sellerEmail;
+	public void setApiCredential(APICredential apiCredential) {
+		this.apiCredential = apiCredential;
 	}
 
-	public String getSellerEmail() {
-		return sellerEmail;
+	public APICredential getApiCredential() {
+		return apiCredential;
 	}
+	
 	
 	public boolean verifyResponse(String responseString){
 		responseString = "cmd=_notify-validate&"+responseString;
@@ -42,7 +43,7 @@ public class PaypalIPNVerifier {
 			PaypalResponseDecoder decoder = new PaypalResponseDecoder();
 			try {
 				decoder.decode(responseString);
-				if(decoder.get("receiver_email").equalsIgnoreCase(this.sellerEmail)){
+				if(decoder.get("receiver_email").equalsIgnoreCase(this.apiCredential.getEmail())){
 					logger.info("Verified IPN Message");
 					return true;
 				}
@@ -91,5 +92,7 @@ public class PaypalIPNVerifier {
         }
 		
 	}
+
+	
 	
 }
