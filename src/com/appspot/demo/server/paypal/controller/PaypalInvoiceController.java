@@ -1,7 +1,11 @@
 package com.appspot.demo.server.paypal.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.appspot.demo.client.paypal.dto.InvoiceDto;
+import com.appspot.demo.server.paypal.dao.ActionLogDao;
 import com.appspot.demo.server.paypal.dao.InvoiceDao;
 import com.appspot.demo.server.paypal.dao.PackageDao;
 import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
+import com.appspot.demo.server.paypal.model.Role;
+import com.appspot.demo.server.paypal.service.ActionLoggerService;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 import com.google.appengine.api.datastore.KeyFactory;
-
-
-
 
 
 @Controller
@@ -44,6 +48,7 @@ public class PaypalInvoiceController {
 	@Autowired
 	private UserInfoService userInfoService;
 	
+	
 	@RequestMapping(value="/get",  method=RequestMethod.GET)
 	public String getInvoiceByUserId(Model model){
 		Collection<Invoice> invoices = this.invoiceDao.getInvoiceByAppUser(this.userInfoService.getCurrentApplicationUser());
@@ -53,6 +58,82 @@ public class PaypalInvoiceController {
 		}
 		model.addAttribute("invoiceDtoList", invoiceDtos);
 		return "invoiceDtoList";
+	}
+	
+	@RequestMapping(value="/admin/get", method=RequestMethod.GET)
+	public String getAllInvoice(Model model){
+		Collection<Invoice> invoices = this.invoiceDao.getAllInvoice();
+		List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+		for(Invoice invoice: invoices){
+			invoiceDtos.add(this.convertInvoiceToDto(invoice));
+		}
+		model.addAttribute("invoiceDtoList", invoiceDtos);
+		return "invoiceDtoList";
+		
+	}
+	
+	@RequestMapping(value="/startDate/{startDate}/endDate/{endDate}/get", method=RequestMethod.GET)
+	public String getInvoiceBetween(@PathVariable String startDate, @PathVariable String endDate, Model model){
+		logger.info("Start date is "+ startDate);
+		logger.info("End Date is "+ endDate);
+		Date start = this.parseDate(startDate);
+		Date end = this.parseDate(endDate);
+		if(start != null && end !=null){
+			Collection<Invoice> invoices = this.invoiceDao.getInvoiceByDate(start, end, this.userInfoService.getCurrentApplicationUser());
+			List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+			for(Invoice invoice: invoices){
+				invoiceDtos.add(this.convertInvoiceToDto(invoice));
+			}
+			model.addAttribute("invoiceDtoList", invoiceDtos);
+			return "invoiceDtoList";
+		}
+		else{
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/admin/startDate/{startDate}/endDate/{endDate}/get", method=RequestMethod.GET)
+	public String getAllInvoiceBetween(@PathVariable String startDate, @PathVariable String endDate, Model model){
+		logger.info("Start date is "+ startDate);
+		logger.info("End Date is "+ endDate);
+		Date start = this.parseDate(startDate);
+		Date end = this.parseDate(endDate);
+		if(start != null && end !=null){
+			Collection<Invoice> invoices = this.invoiceDao.getInvoiceByDate(start, end);
+			List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+			for(Invoice invoice: invoices){
+				invoiceDtos.add(this.convertInvoiceToDto(invoice));
+			}
+			model.addAttribute("invoiceDtoList", invoiceDtos);
+			return "invoiceDtoList";
+		}
+		else{
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/admin/get/failed" ,method=RequestMethod.GET)
+	public String getAllInvoiceWithFailedTransaction(Model model){
+		Collection<Invoice> invoices = this.invoiceDao.getInvoiceWithFailedTransaction();
+		List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+		for(Invoice invoice: invoices){
+			invoiceDtos.add(this.convertInvoiceToDto(invoice));
+		}
+		model.addAttribute("invoiceDtoList", invoiceDtos);
+		return "invoiceDtoList";
+			
+	}
+	
+	private Date parseDate(String date){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+		try {
+			return dateFormat.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			logger.warning("Unable to parse Date");
+			logger.warning(e.getMessage());
+			return null;
+		}
 	}
 	
 	private InvoiceDto convertInvoiceToDto(Invoice invoice){
@@ -74,8 +155,7 @@ public class PaypalInvoiceController {
 		invoiceDto.setShipping(String.valueOf(invoice.getShipping()));
 		
 		return invoiceDto;
-		
-		
-		
+			
 	}
+	
 }

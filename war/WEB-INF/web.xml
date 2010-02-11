@@ -4,6 +4,7 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+   
    <filter>
    		<filter-name>PaypalAuthFilter</filter-name>
    		<filter-class>com.appspot.demo.server.paypal.filter.PaypalAuthFilter</filter-class>
@@ -13,6 +14,18 @@
    		<filter-name>PaypalAuthFilter</filter-name>
    		<url-pattern>/demo/paypal/*</url-pattern>
    </filter-mapping>
+   
+   <filter>
+   		<filter-name>PaypalAdminFilter</filter-name>
+   		<filter-class>com.appspot.demo.server.paypal.filter.PaypalAdminFilter</filter-class>
+   </filter>
+   <filter-mapping>
+   		<filter-name>PaypalAdminFilter</filter-name>
+   		<url-pattern>/demo/paypal/invoice/admin/*</url-pattern>
+   		<url-pattern>/demo/paypal/transaction/admin/*</url-pattern>
+   		<url-pattern>/demo/paypal/productpackage/admin/*</url-pattern>
+   </filter-mapping>
+   
    <servlet>
    		<servlet-name>DemoDispatcher</servlet-name>
    		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

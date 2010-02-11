@@ -1,0 +1,11 @@
+<!-- Indices written at Thu, 11 Feb 2010 08:53:59 UTC -->
+
+<datastore-indexes>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="PaypalTransaction" ancestor="false" source="auto">
+        <property name="paymentStatus" direction="asc"/>
+        <property name="dateCreated" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

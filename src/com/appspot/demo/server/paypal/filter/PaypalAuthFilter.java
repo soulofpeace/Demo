@@ -62,7 +62,7 @@ public class PaypalAuthFilter implements Filter{
 		if(this.userInfoService.isUserLogin()){
 			logger.info("User has authenticated");
 			chain.doFilter(request, response);
-			if(this.appUserDao.getApplicationUserByEmail(this.userInfoService.getCurrentUserEmail())==null){
+			if(this.userInfoService.getCurrentApplicationUser()==null){
 				logger.info("Creating New User");
 				PaypalApplicationUser appUser  = new PaypalApplicationUser();
 				appUser.setDateCreated(new Date());
@@ -84,6 +84,7 @@ public class PaypalAuthFilter implements Filter{
 					List<Key> keys = new ArrayList<Key>();
 					this.actionLoggerService.log(ActionType.FAILEDUSER, ActionSource.WEB, this.userInfoService.getCurrentUserEmail()+" failed to create", keys);
 				}
+				chain.doFilter(request, response);
 			}
 		}
 		else{

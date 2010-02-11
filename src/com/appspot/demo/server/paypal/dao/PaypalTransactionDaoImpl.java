@@ -63,7 +63,8 @@ public class PaypalTransactionDaoImpl implements PaypalTransactionDao{
 		try{
 			Query query = pm.newQuery(PaypalTransaction.class);
 			query.setFilter("invoiceId == invoiceIdParam");
-			query.declareParameters("Key invoiceIdParam");
+			query.setOrdering("dateCreated desc");
+			query.declareParameters("com.google.appengine.api.datastore.Key invoiceIdParam");
 			List<PaypalTransaction> transactions = (List<PaypalTransaction>)query.execute(invoice.getId());
 			Collection<PaypalTransaction> transactionCollection = pm.detachCopyAll(transactions);
 			pm.currentTransaction().commit();

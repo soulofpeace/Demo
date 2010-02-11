@@ -1,6 +1,7 @@
 package com.appspot.demo.server.paypal.dao;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.appspot.demo.server.paypal.model.Invoice;
@@ -17,4 +18,11 @@ public interface InvoiceDao {
 	public Collection<Invoice> getInvoiceByCustomer(PaypalCustomer customer);
 	public Collection<Invoice> getInvoiceByPackage(RecurringProductPackage productPackage);
 	public Collection<Invoice> getInvoiceByAppUser(PaypalApplicationUser appUser);
+	public Collection<Invoice> getAllInvoice();
+	public Collection<Invoice> getInvoiceByDate(Date startDate, Date endDate);
+	public Collection<Invoice> getInvoiceByDate(Date startDate, Date endDate, PaypalApplicationUser appUser);
+	public Collection<Invoice> getInvoiceWithFailedTransaction();
+	public Collection<Invoice> getInvoiceWithFailedTransaction(Date startDate, Date endDate);
+	public Collection<Invoice> getInvoiceWithFailedTransaction(PaypalApplicationUser paypalApplicationUser);
+	public Collection<Invoice> getInvoiceWithFailedTransaction(Date startDate, Date endDate, PaypalApplicationUser paypalApplicationUser);
 }

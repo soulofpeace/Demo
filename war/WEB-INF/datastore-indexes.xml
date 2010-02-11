@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="true">
+    <datastore-index kind="PaypalTransaction" ancestor="false" source="manual">
+        <property name="invoiceId" direction="asc"/>
+        <property name="dateCreated" direction="desc"/>
+        <property name="paymentStatus" direction="asc"/>
+        
+    </datastore-index>
+    <datastore-index kind="Invoice" ancestor="false" source="manual">
+        <property name="appUser" direction="asc"/>
+        <property name="createdDate" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

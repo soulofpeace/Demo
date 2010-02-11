@@ -1,6 +1,9 @@
 package com.appspot.demo.server.paypal.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
+import com.appspot.demo.server.paypal.model.PaypalTransaction;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -75,6 +79,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("paypalRecurringPaymentProfileId == profileIdParam");
 			query.declareParameters("String profileIdParam");
+			query.setOrdering("createdDate desc");
 			List<Invoice> invoices = (List<Invoice>)query.execute(profileId);
 			pm.currentTransaction().commit();
 			if(invoices.isEmpty()){
@@ -115,6 +120,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("customerId == customerIdParam");
 			query.declareParameters("com.google.appengine.api.datastore.Key customerIdParam");
+			query.setOrdering("createdDate desc");
 			Collection<Invoice> invoices =pm.detachCopyAll((Collection<Invoice>) query.execute(customer.getId()));
 			pm.currentTransaction().commit();
 			return invoices;
@@ -138,6 +144,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("productPackageId == productPackageIdParam");
 			query.declareParameters("com.google.appengine.api.datastore.Key productPackageIdParam");
+			query.setOrdering("createdDate desc");
 			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice> )query.execute(productPackage.getId()));
 			pm.currentTransaction().commit();
 			return invoices;
@@ -159,6 +166,7 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		try{
 			Query query = pm.newQuery(Invoice.class);
 			query.setFilter("appUser == appUserParam");
+			query.setOrdering("createdDate desc");
 			query.declareParameters("com.google.appengine.api.datastore.Key appUserParam");
 			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute(appUser.getId()));
 			pm.currentTransaction().commit();
@@ -170,6 +178,142 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			}
 			pm.close();
 		}
+	}
+
+	@Override
+	public Collection<Invoice> getAllInvoice() {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(Invoice.class);
+			query.setOrdering("createdDate desc");
+			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute());
+			pm.currentTransaction().commit();
+			return invoices;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+		
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceByDate(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query =  pm.newQuery(Invoice.class);
+			query.setOrdering("createdDate desc");
+			query.setFilter("createdDate >=startDateParam && createdDate<=endDateParam");
+			query.declareParameters("java.util.Date startDateParam, java.util.Date endDateParam");
+			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute(startDate, endDate));
+			pm.currentTransaction().commit();
+			return invoices;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceByDate(Date startDate, Date endDate,
+			PaypalApplicationUser appUser) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query query = pm.newQuery(Invoice.class);
+			query.setOrdering("createdDate desc");
+			query.setFilter("createdDate >=startDateParam && createdDate<=endDateParam && appUser==appUserParam");
+			query.declareParameters("java.util.Date startDateParam, java.util.Date endDateParam, com.google.appengine.api.datastore.Key appUserParam");
+			Collection<Invoice> invoices = pm.detachCopyAll((Collection<Invoice>)query.execute(startDate, endDate,  appUser.getId()));
+			pm.currentTransaction().commit();
+			return invoices;
+		}
+		finally{
+			if(pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceWithFailedTransaction() {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Query query = pm.newQuery("select from com.appspot.demo.server.paypal.model.PaypalTransaction where paymentStatus != 'Completed' order by paymentStatus, dateCreated desc");
+		Collection<Invoice> invoiceList = new HashSet<Invoice>();
+		List<PaypalTransaction> transactions =(List<PaypalTransaction>) query.execute();
+		if(transactions.iterator().hasNext()){
+			for(PaypalTransaction transaction: transactions){
+				Key invoiceId = transaction.getInvoiceId();
+				Invoice invoice = pm.getObjectById(Invoice.class, invoiceId);
+				invoiceList.add(pm.detachCopy(invoice));
+			}
+		}
+		return invoiceList;
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceWithFailedTransaction(Date startDate,
+			Date endDate) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Query query = pm.newQuery("select from com.appspot.demo.server.paypal.model.PaypalTransaction where paymentStatus != 'Completed' order by paymentStatus, dateCreated desc");
+		Collection<Invoice> invoiceList = new HashSet<Invoice>();
+		List<PaypalTransaction> transactions =(List<PaypalTransaction>) query.execute();
+		if(transactions.iterator().hasNext()){
+			for(PaypalTransaction transaction: transactions){
+				Key invoiceId = transaction.getInvoiceId();
+				Invoice invoice = pm.getObjectById(Invoice.class, invoiceId);
+				invoiceList.add(pm.detachCopy(invoice));
+			}
+		}
+		return invoiceList;
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceWithFailedTransaction(
+			PaypalApplicationUser paypalApplicationUser) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Query query = pm.newQuery("select from com.appspot.demo.server.paypal.model.PaypalTransaction where paymentStatus != 'Completed' order by paymentStatus, dateCreated desc");
+		Collection<Invoice> invoiceList = new HashSet<Invoice>();
+		List<PaypalTransaction> transactions =(List<PaypalTransaction>) query.execute();
+		if(transactions.iterator().hasNext()){
+			for(PaypalTransaction transaction: transactions){
+				Key invoiceId = transaction.getInvoiceId();
+				Invoice invoice = pm.getObjectById(Invoice.class, invoiceId);
+				invoiceList.add(pm.detachCopy(invoice));
+			}
+		}
+		return invoiceList;
+	}
+
+	@Override
+	public Collection<Invoice> getInvoiceWithFailedTransaction(Date startDate,
+			Date endDate, PaypalApplicationUser paypalApplicationUser) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Query query = pm.newQuery("select from com.appspot.demo.server.paypal.model.PaypalTransaction where paymentStatus != 'Completed' order by paymentStatus, dateCreated desc");
+		Collection<Invoice> invoiceList = new HashSet<Invoice>();
+		List<PaypalTransaction> transactions =(List<PaypalTransaction>) query.execute();
+		if(transactions.iterator().hasNext()){
+			for(PaypalTransaction transaction: transactions){
+				Key invoiceId = transaction.getInvoiceId();
+				Invoice invoice = pm.getObjectById(Invoice.class, invoiceId);
+				invoiceList.add(pm.detachCopy(invoice));
+			}
+		}
+		return invoiceList;
 	}
 	
 	
