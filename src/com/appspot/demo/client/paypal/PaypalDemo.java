@@ -1,6 +1,8 @@
 package com.appspot.demo.client.paypal;
 
+import com.appspot.demo.client.paypal.dto.js.PaypalApplicationUserJs;
 import com.appspot.demo.client.paypal.dto.js.ProductPackageJS;
+import com.appspot.demo.server.paypal.model.Role;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,17 +23,22 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PaypalDemo implements EntryPoint {
 	
-	private VerticalPanel contentPanel = new VerticalPanel();
+	private VerticalPanel packagePanel = new VerticalPanel();
+	private VerticalPanel invoicePanel = new VerticalPanel();
+	private TabPanel contentPanel = new TabPanel();
 	private FlexTable packageTable = new FlexTable();
+	private PaypalApplicationUserJs appUser;
 
 	@Override
 	public void onModuleLoad() {
 		// TODO Auto-generated method stub
-		this.setupContentPanel();
+		//this.setupContentPanel();
+		this.getCurrentAppUser();
 		RootPanel.get().add(contentPanel);
 
 	}
@@ -39,10 +46,11 @@ public class PaypalDemo implements EntryPoint {
 	
 	private void setupContentPanel(){
 		//this.setupFormPanel();
-		this.setupPackageTable();
-		this.contentPanel.add(packageTable);
-		Anchor addNewPackageLink = new Anchor("Add New Package", "new");
-		this.contentPanel.add(addNewPackageLink);
+		//tabPanel
+		this.setupPackagePanel();
+		this.contentPanel.add(this.packagePanel, "Available Packages");
+		this.contentPanel.add(this.invoicePanel, "Purchased Packages");
+		this.contentPanel.selectTab(0);
 	}
 	
 	/**
@@ -55,7 +63,11 @@ public class PaypalDemo implements EntryPoint {
 	}
 	**/
 	
-	private void setupPackageTable(){
+	private void setupInvoicePanel(){
+		
+	}
+	
+	private void setupPackagePanel(){
 		this.packageTable.setText(0, 0, "Package Logo");
 		this.packageTable.setText(0, 1, "Package Name");
 		this.packageTable.setText(0, 2, "Package Description");
@@ -137,11 +149,53 @@ public class PaypalDemo implements EntryPoint {
 		catch(RequestException ex){
 			
 		}
+		this.packagePanel.add(packageTable);
+		if(appUser.getUserRole().equalsIgnoreCase("ADMIN")){
+			Anchor addNewPackageLink = new Anchor("Add New Package", "new");
+			this.packagePanel.add(addNewPackageLink);
+		}
 		
 	}
 	
 	private final native JsArray<ProductPackageJS> getPackagesFromJson(String json)/*-{
 		return eval('('+json+')').productPackageDtoList;
 	}-*/;
+	
+	
+	private void getCurrentAppUser(){
+		String url="http://choonkeedemo.appspot.com/demo/paypal/appuser/get.json";
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder.setHeader("Content-Type", "application/json");
+		try{
+			Request request = requestBuilder.sendRequest(null, new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					// TODO Auto-generated method stub
+					if(200==response.getStatusCode()){
+						
+						String json = response.getText();
+						//debug.setText("json is "+json);
+						appUser = PaypalApplicationUserJs.fromJson(json);
+						//debug.setText("json is "+json+" appUserEmail is"+appUser.getUserEmail());
+						setupContentPanel();
+					}
+					else{
+						//debug.setText("No output");
+					}
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		}
+		catch(RequestException ex){
+			
+		}
+		
+	}
 
 }
