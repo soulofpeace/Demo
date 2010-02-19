@@ -32,6 +32,7 @@ import com.appspot.demo.server.paypal.model.ActionType;
 import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalCustomer;
 import com.appspot.demo.server.paypal.model.PaypalTransaction;
+import com.appspot.demo.server.paypal.model.PaypalTransactionDateCreatedIndex;
 import com.appspot.demo.server.paypal.model.RecurringProductPackage;
 import com.appspot.demo.server.paypal.service.ActionLoggerService;
 import com.appspot.demo.server.paypal.service.PaypalService;
@@ -282,9 +283,11 @@ public class PaypalIPNController {
 		if(reasonCode!=null){
 			paypalTransaction.setReasonCode(reasonCode);
 		}
-		
+		//PaypalTransactionDateCreatedIndex dateCreatedIndex = new PaypalTransactionDateCreatedIndex();
+		//dateCreatedIndex.setDateCreated(new Date());
 		paypalTransaction.setDateCreated(new Date());
 		paypalTransaction.setInvoiceId(invoice.getId());
+		//paypalTransaction.setDateCreatedIndex(dateCreatedIndex);
 		String transactionId= this.paypalTransactionDao.savePaypalTransaction(paypalTransaction);
 		if(transactionId!=null){
 			//invoice.getTransactions().add(KeyFactory.stringToKey(transactionId));

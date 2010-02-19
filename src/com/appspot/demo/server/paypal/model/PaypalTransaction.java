@@ -20,6 +20,9 @@ public class PaypalTransaction {
 	@Persistent
 	private Date dateCreated;
 	
+	//@Persistent(dependent="true", mappedBy="paypalTransaction", defaultFetchGroup = "true")
+	//private PaypalTransactionDateCreatedIndex dateCreatedIndex;
+	
 	@Persistent
 	private double mcGross;
 	
@@ -465,6 +468,16 @@ public class PaypalTransaction {
 	public double getPaymentFee() {
 		return paymentFee;
 	}
+
+	/**
+	public void setDateCreatedIndex(PaypalTransactionDateCreatedIndex dateCreatedIndex) {
+		this.dateCreatedIndex = dateCreatedIndex;
+	}
+
+	public PaypalTransactionDateCreatedIndex getDateCreatedIndex() {
+		return dateCreatedIndex;
+	}
+	**/
 	
 	
 	

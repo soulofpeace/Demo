@@ -112,7 +112,38 @@ public class PaypalInvoiceController {
 		}
 	}
 	
-	@RequestMapping(value="/admin/get/failed" ,method=RequestMethod.GET)
+	@RequestMapping(value="/failed/get", method=RequestMethod.GET)
+	public String getInvoiceWithFailedTransaction(Model model){
+		Collection<Invoice> invoices = this.invoiceDao.getInvoiceWithFailedTransaction(this.userInfoService.getCurrentApplicationUser());
+		List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+		for(Invoice invoice: invoices){
+			invoiceDtos.add(this.convertInvoiceToDto(invoice));
+		}
+		model.addAttribute("invoiceDtoList", invoiceDtos);
+		return "invoiceDtoList";		
+	}
+	
+	@RequestMapping(value="/failed/startDate/{startDate}/endDate/{endDate}/get")
+	public String getInvoiceWithFailedTransaction(@PathVariable String startDate, @PathVariable String endDate, Model model){
+		logger.info("Start date is "+ startDate);
+		logger.info("End Date is "+ endDate);
+		Date start = this.parseDate(startDate);
+		Date end = this.parseDate(endDate);
+		if(start != null && end !=null){
+			Collection<Invoice> invoices = this.invoiceDao.getInvoiceWithFailedTransaction(start, end, this.userInfoService.getCurrentApplicationUser());
+			List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+			for(Invoice invoice: invoices){
+				invoiceDtos.add(this.convertInvoiceToDto(invoice));
+			}
+			model.addAttribute("invoiceDtoList", invoiceDtos);
+			return "invoiceDtoList";
+		}
+		else{
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/admin/failed/get" ,method=RequestMethod.GET)
 	public String getAllInvoiceWithFailedTransaction(Model model){
 		Collection<Invoice> invoices = this.invoiceDao.getInvoiceWithFailedTransaction();
 		List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
@@ -122,6 +153,26 @@ public class PaypalInvoiceController {
 		model.addAttribute("invoiceDtoList", invoiceDtos);
 		return "invoiceDtoList";
 			
+	}
+	
+	@RequestMapping(value="/admin/failed/startDate/{startDate}/endDate/{endDate}/get")
+	public String getAllInvoiceWithFailedTransaction(@PathVariable String startDate, @PathVariable String endDate, Model model){
+		logger.info("Start date is "+ startDate);
+		logger.info("End Date is "+ endDate);
+		Date start = this.parseDate(startDate);
+		Date end = this.parseDate(endDate);
+		if(start != null && end !=null){
+			Collection<Invoice> invoices = this.invoiceDao.getInvoiceWithFailedTransaction(start, end);
+			List<InvoiceDto> invoiceDtos = new ArrayList<InvoiceDto>();
+			for(Invoice invoice: invoices){
+				invoiceDtos.add(this.convertInvoiceToDto(invoice));
+			}
+			model.addAttribute("invoiceDtoList", invoiceDtos);
+			return "invoiceDtoList";
+		}
+		else{
+			return null;
+		}
 	}
 	
 	private Date parseDate(String date){

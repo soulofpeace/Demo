@@ -58,6 +58,7 @@ public class PaypalTransactionController {
 		PaypalTransactionDto paypalTransactionDto = new PaypalTransactionDto();
 		paypalTransactionDto.setKey(KeyFactory.keyToString(paypalTransaction.getId()));
 		paypalTransactionDto.setDateCreated(paypalTransaction.getDateCreated());
+		//paypalTransactionDto.setDateCreated(paypalTransaction.getDateCreatedIndex().getDateCreated());
 		paypalTransactionDto.setMcGross(String.valueOf(paypalTransaction.getMcGross()));
 		paypalTransactionDto.setMcFee(String.valueOf(paypalTransaction.getMcFee()));
 		paypalTransactionDto.setMcHandling(String.valueOf(paypalTransaction.getMcHandling()));
