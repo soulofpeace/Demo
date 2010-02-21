@@ -57,7 +57,7 @@ public class PaypalTransactionController {
 	private PaypalTransactionDto convertPaypalTransactionToDto(PaypalTransaction paypalTransaction){
 		PaypalTransactionDto paypalTransactionDto = new PaypalTransactionDto();
 		paypalTransactionDto.setKey(KeyFactory.keyToString(paypalTransaction.getId()));
-		paypalTransactionDto.setDateCreated(paypalTransaction.getDateCreated());
+		paypalTransactionDto.setDateCreated(paypalTransaction.getDateCreated().toString());
 		//paypalTransactionDto.setDateCreated(paypalTransaction.getDateCreatedIndex().getDateCreated());
 		paypalTransactionDto.setMcGross(String.valueOf(paypalTransaction.getMcGross()));
 		paypalTransactionDto.setMcFee(String.valueOf(paypalTransaction.getMcFee()));
@@ -69,7 +69,7 @@ public class PaypalTransactionController {
 		paypalTransactionDto.setReceiptId(paypalTransaction.getReceiptId());
 		paypalTransactionDto.setTransactionType(paypalTransaction.getTransactionType());
 		paypalTransactionDto.setPaymentType(paypalTransaction.getPaymentType());
-		paypalTransactionDto.setOrderTime(paypalTransaction.getOrderTime());
+		paypalTransactionDto.setOrderTime(paypalTransaction.getOrderTime().toString());
 		paypalTransactionDto.setAmount(String.valueOf(paypalTransaction.getAmount()));
 		paypalTransactionDto.setCurrencyCode(paypalTransaction.getCurrencyCode());
 		paypalTransactionDto.setFeeAmount(String.valueOf(paypalTransaction.getFeeAmount()));
@@ -83,7 +83,7 @@ public class PaypalTransactionController {
 		paypalTransactionDto.setCustom(paypalTransaction.getCustom());
 		paypalTransactionDto.setNote(paypalTransaction.getNote());
 		paypalTransactionDto.setSalesTax(String.valueOf(paypalTransaction.getSalestax()));
-		paypalTransactionDto.setPaymentDate(paypalTransaction.getPaymentDate());
+		paypalTransactionDto.setPaymentDate(paypalTransaction.getPaymentDate().toString());
 		paypalTransactionDto.setSubject(paypalTransaction.getSubject());
 		paypalTransactionDto.setShipping(String.valueOf(paypalTransaction.getShipping()));
 		paypalTransactionDto.setPaymentGross(String.valueOf(paypalTransaction.getPaymentGross()));

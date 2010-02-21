@@ -1,6 +1,8 @@
 package com.appspot.demo.client.paypal;
 
+import com.appspot.demo.client.paypal.dto.js.InvoiceJs;
 import com.appspot.demo.client.paypal.dto.js.PaypalApplicationUserJs;
+import com.appspot.demo.client.paypal.dto.js.PaypalTransactionJs;
 import com.appspot.demo.client.paypal.dto.js.ProductPackageJS;
 import com.appspot.demo.server.paypal.model.Role;
 import com.google.gwt.core.client.EntryPoint;
@@ -30,9 +32,13 @@ public class PaypalDemo implements EntryPoint {
 	
 	private VerticalPanel packagePanel = new VerticalPanel();
 	private VerticalPanel invoicePanel = new VerticalPanel();
+	private VerticalPanel transactionPanel = new VerticalPanel();
 	private TabPanel contentPanel = new TabPanel();
 	private FlexTable packageTable = new FlexTable();
+	private FlexTable invoiceTable = new FlexTable();
+	private FlexTable transactionTable = new FlexTable();
 	private PaypalApplicationUserJs appUser;
+	private boolean isAdmin = false;
 
 	@Override
 	public void onModuleLoad() {
@@ -48,6 +54,7 @@ public class PaypalDemo implements EntryPoint {
 		//this.setupFormPanel();
 		//tabPanel
 		this.setupPackagePanel();
+		this.setupInvoicePanel();
 		this.contentPanel.add(this.packagePanel, "Available Packages");
 		this.contentPanel.add(this.invoicePanel, "Purchased Packages");
 		this.contentPanel.selectTab(0);
@@ -64,6 +71,163 @@ public class PaypalDemo implements EntryPoint {
 	**/
 	
 	private void setupInvoicePanel(){
+		this.invoiceTable.setText(0, 0, "Id");
+		this.invoiceTable.setText(0, 1, "Created Date");
+		this.invoiceTable.setText(0, 2, "Modified Date");
+		this.invoiceTable.setText(0, 3, "Status");
+		this.invoiceTable.setText(0, 4, "Outstanding Balance");
+		this.invoiceTable.setText(0, 5, "Package Name");
+		this.invoiceTable.setText(0, 6, "Paypal Email");
+		this.invoiceTable.setText(0, 7, "Next Payment Date");
+		this.invoiceTable.setText(0, 8, "Currency Code");
+		this.invoiceTable.setText(0, 9, "Intial Payment Amount");
+		this.invoiceTable.setText(0, 10, "Shipping");
+		this.invoiceTable.setText(0, 11, "Tax");
+		this.invoiceTable.setText(0, 12, "Action");
+		this.invoiceTable.getRowFormatter().addStyleName(0, "packageHeader");
+		this.invoiceTable.addStyleName("packageList");
+		if(!isAdmin){
+			this.getUserInvoice();
+		}
+		this.invoicePanel.add(invoiceTable);
+	}
+	
+	
+	private void setupTransactionPanel(String invoiceId){
+		
+		this.transactionTable.setText(0, 0, "Id");
+		this.transactionTable.setText(0, 1, "Date Created");
+		this.transactionTable.setText(0, 2, "Paypal Transaction Id");
+		this.transactionTable.setText(0, 3, "Parent Transaction Id");
+		this.transactionTable.setText(0, 4, "Recipt Id");
+		this.transactionTable.setText(0, 5, "Transaction Type");
+		this.transactionTable.setText(0, 6, "Payment Type");
+		this.transactionTable.setText(0, 7, "Order Time");
+		this.transactionTable.setText(0, 8, "Amount");
+		this.transactionTable.setText(0, 9, "Currency Code");
+		this.transactionTable.setText(0, 10, "Fee Amount");
+		this.transactionTable.setText(0, 11, "Settle Amount");
+		this.transactionTable.setText(0, 12, "Tax Amount");
+		this.transactionTable.setText(0, 13, "Exchange Rate");
+		this.transactionTable.setText(0, 14, "Pending Reason");
+		this.transactionTable.setText(0, 15, "Reason Code");
+		this.transactionTable.setText(0, 16, "Protection Eligibility");
+		this.transactionTable.setText(0, 17, "Custom");
+		this.transactionTable.setText(0, 18, "Note");
+		this.transactionTable.setText(0, 19, "Sale Tax");
+		this.transactionTable.setText(0, 20, "Payment Date");
+		this.transactionTable.setText(0, 21, "Subject");
+		this.transactionTable.setText(0, 22, "Shipping");
+		this.transactionTable.setText(0, 23, "Payment Gross");
+		this.transactionTable.setText(0, 24, "Payment Status");
+		this.transactionTable.getRowFormatter().addStyleName(0, "packageHeader");
+		this.transactionTable.addStyleName("packageList");
+		
+		String url ="http://choonkeedemo.appspot.com/demo/paypal/transaction/invoice/"+invoiceId+"/get.json";
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder.setHeader("Content-Type", "application/json");
+		try{
+			Request request = requestBuilder.sendRequest(null, new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					// TODO Auto-generated method stub
+					if(200==response.getStatusCode()){
+						String json = response.getText();
+						JsArray<PaypalTransactionJs> transactions = getTransactionsFromJson(json);
+						for(int i =0; i<transactions.length(); i++){
+							Label id = new Label(transactions.get(i).getKey());
+							Label dateCreated = new Label(transactions.get(i).getDateCreated());
+							Label paypalTransactionId = new Label(transactions.get(i).getTransactionId());
+							Label parentTransactionId = new Label(transactions.get(i).getParentTransactionId());
+							Label receiptId = new Label(transactions.get(i).getReceiptId());
+							Label transactionType = new Label(transactions.get(i).getTransactionType());
+							Label paymentType = new Label(transactions.get(i).getPaymentType());
+							Label orderTime = new Label(transactions.get(i).getOrderTime());
+							Label amount = new Label(transactions.get(i).getAmount());
+							Label currencyCode = new Label(transactions.get(i).getCurrencyCode());
+							Label feeAmount = new Label(transactions.get(i).getFeeAmount());
+							Label settleAmount = new Label(transactions.get(i).getSettleAmount());
+							Label taxAmount = new Label(transactions.get(i).getTaxAmount());
+							Label exchangeRate = new Label(transactions.get(i).getExchangeRate());
+							Label pendingReason = new Label(transactions.get(i).getPendingReason());
+							Label reasonCode = new Label(transactions.get(i).getReasonCode());
+							Label protectionEligbility = new Label(transactions.get(i).getProtectionEligibility());
+							Label custom = new Label(transactions.get(i).getCustom());
+							Label note = new Label(transactions.get(i).getNote());
+							Label saleTax = new Label(transactions.get(i).getSalesTax());
+							Label paymentDate = new Label(transactions.get(i).getPaymentDate());
+							Label subject = new Label(transactions.get(i).getSubject());
+							Label shipping = new Label(transactions.get(i).getShipping());
+							Label paymentGross = new Label(transactions.get(i).getPaymentGross());
+							Label paymentStatus = new Label(transactions.get(i).getPaymentStatus());
+							
+							transactionTable.setWidget(i+1, 0, id);
+							transactionTable.setWidget(i+1, 1, dateCreated);
+							transactionTable.setWidget(i+1, 2, paypalTransactionId);
+							transactionTable.setWidget(i+1, 3, parentTransactionId);
+							transactionTable.setWidget(i+1, 4, receiptId);
+							transactionTable.setWidget(i+1, 5, transactionType);
+							transactionTable.setWidget(i+1, 6, paymentType);
+							transactionTable.setWidget(i+1, 7, orderTime);
+							transactionTable.setWidget(i+1, 8, amount);
+							transactionTable.setWidget(i+1, 9, currencyCode);
+							transactionTable.setWidget(i+1, 10, feeAmount);
+							transactionTable.setWidget(i+1, 11, settleAmount);
+							transactionTable.setWidget(i+1, 12, taxAmount);
+							transactionTable.setWidget(i+1, 13, exchangeRate);
+							transactionTable.setWidget(i+1, 14, pendingReason);
+							transactionTable.setWidget(i+1, 15, reasonCode);
+							transactionTable.setWidget(i+1, 16, protectionEligbility);
+							transactionTable.setWidget(i+1, 17, custom);
+							transactionTable.setWidget(i+1, 18, note);
+							transactionTable.setWidget(i+1, 19, saleTax);
+							transactionTable.setWidget(i+1, 20, paymentDate);
+							transactionTable.setWidget(i+1, 21, subject);
+							transactionTable.setWidget(i+1, 22, shipping);
+							transactionTable.setWidget(i+1, 23, paymentGross);
+							transactionTable.setWidget(i+1, 24, paymentStatus);
+							
+						}
+						Button backbutton1 = new Button("Back to Invoices");
+						backbutton1.addClickHandler(new ClickHandler() {
+							
+							@Override
+							public void onClick(ClickEvent event) {
+								// TODO Auto-generated method stub
+								invoicePanel.remove(transactionPanel);
+								invoicePanel.add(invoiceTable);
+							}
+						});
+						transactionPanel.add(backbutton1);
+						transactionPanel.add(transactionTable);
+						Button backbutton2 = new Button("Back to Invoices");
+						backbutton2.addClickHandler(new ClickHandler() {
+							
+							@Override
+							public void onClick(ClickEvent event) {
+								// TODO Auto-generated method stub
+								invoicePanel.remove(transactionPanel);
+								transactionPanel = new VerticalPanel();
+								invoicePanel.add(invoiceTable);
+							}
+						});
+						transactionPanel.add(backbutton2);
+					}
+					
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+		}
+		catch(RequestException ex){
+			
+		}
 		
 	}
 	
@@ -150,17 +314,99 @@ public class PaypalDemo implements EntryPoint {
 			
 		}
 		this.packagePanel.add(packageTable);
-		if(appUser.getUserRole().equalsIgnoreCase("ADMIN")){
+		if(isAdmin){
 			Anchor addNewPackageLink = new Anchor("Add New Package", "new");
 			this.packagePanel.add(addNewPackageLink);
 		}
 		
 	}
 	
+	private void getUserInvoice(){
+		String url ="http://choonkeedemo.appspot.com/demo/paypal/invoice/get.json";
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder.setHeader("Content-Type", "application/json");
+		try{
+			Request request = requestBuilder.sendRequest(null, new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					// TODO Auto-generated method stub
+					if(200==response.getStatusCode()){
+						String json = response.getText();
+						JsArray<InvoiceJs> invoices = getInvoicesFromJson(json);
+						populateInvoiceTable(invoices);
+					}
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		}
+		catch(RequestException ex){
+			
+		}
+	}
+	
 	private final native JsArray<ProductPackageJS> getPackagesFromJson(String json)/*-{
 		return eval('('+json+')').productPackageDtoList;
 	}-*/;
 	
+	private final native JsArray<InvoiceJs> getInvoicesFromJson(String json)/*-{
+		return eval('('+json+')').invoiceDtoList;
+	}-*/;
+	
+	private final native JsArray<PaypalTransactionJs> getTransactionsFromJson(String json)/*-{
+		return eval('('+json+')').transactionDtoList;
+	}-*/;
+	
+	
+	private void populateInvoiceTable(JsArray<InvoiceJs> invoices){
+		for(int i =0; i<invoices.length();i++){
+			final Label id = new Label(invoices.get(i).getKey());
+			Label createdDate = new Label(invoices.get(i).getCreatedDate());
+			Label modifiedDate = new Label(invoices.get(i).getModifiedDate());
+			Label status = new Label(invoices.get(i).getStatus());
+			Label outstandingBalance = new Label(invoices.get(i).getOutstandingBalance());
+			Label packageName = new Label(invoices.get(i).getProductPackageName());
+			Label paypalEmail = new Label(invoices.get(i).getCustomerEmail());
+			Label nextPaymentDate = new Label(invoices.get(i).getNextPaymentDate());
+			Label currencyCode = new Label(invoices.get(i).getCurrencyCode());
+			Label initialPaymentAmount = new Label(invoices.get(i).getInitialPaymentAmount());
+			Label shipping = new Label(invoices.get(i).getShipping());
+			Label tax = new Label(invoices.get(i).getTax());
+	
+			
+			invoiceTable.setWidget(i+1, 0, id);
+			invoiceTable.setWidget(i+1, 1, createdDate);
+			invoiceTable.setWidget(i+1, 2, modifiedDate);
+			invoiceTable.setWidget(i+1, 3, status);
+			invoiceTable.setWidget(i+1, 4, outstandingBalance);
+			invoiceTable.setWidget(i+1, 5, packageName);
+			invoiceTable.setWidget(i+1, 6, paypalEmail);
+			invoiceTable.setWidget(i+1, 7, nextPaymentDate);
+			invoiceTable.setWidget(i+1, 8, currencyCode);
+			invoiceTable.setWidget(i+1, 9, initialPaymentAmount);
+			invoiceTable.setWidget(i+1, 10, shipping);
+			invoiceTable.setWidget(i+1, 11, tax);
+			
+			Button viewTransaction = new Button("View Transactions");
+			viewTransaction.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					// TODO Auto-generated method stub
+					setupTransactionPanel(id.getText());
+					invoicePanel.remove(invoiceTable);
+					invoicePanel.add(transactionPanel);
+				}
+			});
+			
+			invoiceTable.setWidget(i+1, 12, viewTransaction);
+		}
+	}
 	
 	private void getCurrentAppUser(){
 		String url="http://choonkeedemo.appspot.com/demo/paypal/appuser/get.json";
@@ -178,6 +424,12 @@ public class PaypalDemo implements EntryPoint {
 						//debug.setText("json is "+json);
 						appUser = PaypalApplicationUserJs.fromJson(json);
 						//debug.setText("json is "+json+" appUserEmail is"+appUser.getUserEmail());
+						if(appUser.getUserRole().equalsIgnoreCase("ADMIN")){
+							isAdmin = true;
+						}
+						else{
+							isAdmin = false;
+						}
 						setupContentPanel();
 					}
 					else{

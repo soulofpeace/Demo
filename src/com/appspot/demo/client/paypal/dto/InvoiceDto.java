@@ -38,7 +38,6 @@ public class InvoiceDto {
 	private String appUserId;
 	
 	
-	
 
 	public void setKey(String key) {
 		this.key = key;

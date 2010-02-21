@@ -192,6 +192,8 @@ public class PaypalInvoiceController {
 		RecurringProductPackage productPackage = packageDao.getPackageById(KeyFactory.keyToString(invoice.getProductPackageId()));
 		
 		InvoiceDto invoiceDto = new InvoiceDto();
+		invoiceDto.setKey(KeyFactory.keyToString(invoice.getId()));
+		invoiceDto.setStatus(invoice.getStatus());
 		invoiceDto.setAppUserId(KeyFactory.keyToString(invoice.getId()));
 		invoiceDto.setCustomerId(KeyFactory.keyToString(invoice.getCustomerId()));
 		invoiceDto.setCustomerEmail(customer.getPayerEmail());
@@ -204,7 +206,8 @@ public class PaypalInvoiceController {
 		invoiceDto.setInitalPaymentAmount(String.valueOf(invoice.getInitialPaymentAmount()));
 		invoiceDto.setTax(String.valueOf(invoice.getTax()));
 		invoiceDto.setShipping(String.valueOf(invoice.getShipping()));
-		
+		invoiceDto.setOutstandingBalance(String.valueOf(invoice.getOutstandingBalance()));
+		invoiceDto.setModifiedDate(invoice.getModifiedDate().toString());
 		return invoiceDto;
 			
 	}

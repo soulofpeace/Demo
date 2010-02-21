@@ -7,7 +7,7 @@ public class PaypalTransactionDto {
 	
 	private String key;
 	
-	private Date dateCreated;
+	private String dateCreated;
 	
 	private String mcGross;
 	
@@ -29,7 +29,7 @@ public class PaypalTransactionDto {
 	
 	private String paymentType;
 	
-	private Date orderTime;
+	private String orderTime;
 	
 	private String amount;
 	
@@ -57,7 +57,7 @@ public class PaypalTransactionDto {
 	
 	private String salesTax;
 	
-	private Date paymentDate;
+	private String paymentDate;
 	
 	private String subject;
 	
@@ -87,11 +87,11 @@ public class PaypalTransactionDto {
 		return key;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	public Date getDateCreated() {
+	public String getDateCreated() {
 		return dateCreated;
 	}
 
@@ -175,11 +175,11 @@ public class PaypalTransactionDto {
 		return paymentType;
 	}
 
-	public void setOrderTime(Date orderTime) {
+	public void setOrderTime(String orderTime) {
 		this.orderTime = orderTime;
 	}
 
-	public Date getOrderTime() {
+	public String getOrderTime() {
 		return orderTime;
 	}
 
@@ -287,11 +287,11 @@ public class PaypalTransactionDto {
 		return salesTax;
 	}
 
-	public void setPaymentDate(Date paymentDate) {
+	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 
-	public Date getPaymentDate() {
+	public String getPaymentDate() {
 		return paymentDate;
 	}
 

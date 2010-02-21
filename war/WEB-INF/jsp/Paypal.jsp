@@ -8,7 +8,7 @@
   </head>
 
   <body>
-  	<h1 class="title"> Packages </h1>
+  	<h1 class="title"> Sales Portal </h1>
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
 
   </body>

@@ -9,24 +9,22 @@ public class InvoiceJs extends JavaScriptObject{
 	protected InvoiceJs(){}
 	
 	public static final native InvoiceJs fromJson(String json)/*-{
-		return eval('('+json+')').invoiceDto;
+		return eval('('+json+')').invoiceDto
 	}-*/;
 	
 	public final native String getKey()/*-{
 		return this.key;
 	}-*/;
 	
-	public final native String customerId()/*-{
-		return this.customerName;
+	
+	public final native String getCustomerEmail()/*-{
+		return this.customerEmail;
 	}-*/;
 	
-	public final native String productPackageId()/*-{
+	public final native String getProductPackageId()/*-{
 		return this.productPackageId;
 	}-*/;
 	
-	public final native String getCustomerName()/*-{
-		return this.customerName;
-	}-*/;
 	
 	public final native String getProductPackageName()/*-{
 		return this.productPackageName;
@@ -49,39 +47,33 @@ public class InvoiceJs extends JavaScriptObject{
 	}-*/;
 	
 	public final native String getOutstandingBalance()/*-{
-		return this.outstandingBalance();
+		return this.outstandingBalance;
 	}-*/;
 	
-	public final native String nextPaymentDate()/*-{
+	public final native String getNextPaymentDate()/*-{
 		return this.nextPaymentDate;
 	}-*/;
 	
-	public final native String currencyCode()/*-{
+	public final native String getCurrencyCode()/*-{
 		return this.currencyCode;
 	}-*/;
 	
-	public final native  String initialPaymentAmount()/*-{
+	public final native  String getInitialPaymentAmount()/*-{
 		return this.initialPaymentAmount;
 	}-*/;
 	
-	public final native String tax()/*-{
+	public final native String getTax()/*-{
 		return this.tax;
 	}-*/;
 	
-	public final native String shipping()/*-{
+	public final native String getShipping()/*-{
 		return this.shipping;
 	}-*/;
-	
-	public final native JsArrayString getTransactions()/*-{
-		return this.transactions;
-	}-*/;
-	
+		
 	public final native String getAppUserId()/*-{
 		return this.appUserId;
 	}-*/;
 	
-	public final native String getAppUserName()/*-{
-		return this.appUserName;
-	}-*/;	
+	
 
 }
