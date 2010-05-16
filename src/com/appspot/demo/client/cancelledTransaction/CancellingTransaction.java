@@ -74,7 +74,7 @@ public class CancellingTransaction implements EntryPoint {
 	}
 	
 	private void getCurrentAppUser(){
-		String url="http://choonkeedemo.appspot.com/demo/paypal/appuser/get.json";
+		String url="https://choonkeedemo.appspot.com/demo/paypal/appuser/get.json";
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
 		requestBuilder.setHeader("Content-Type", "application/json");
 		try{

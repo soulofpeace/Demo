@@ -29,6 +29,9 @@ import com.appspot.demo.server.paypal.model.Role;
 import com.appspot.demo.server.paypal.service.ActionLoggerService;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.gwt.i18n.client.DateTimeFormat;
+
+
 
 
 @Controller
@@ -176,13 +179,13 @@ public class PaypalInvoiceController {
 	}
 	
 	private Date parseDate(String date){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+		//SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 		try {
 			return dateFormat.parse(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			logger.warning("Unable to parse Date");
-			logger.warning(e.getMessage());
 			return null;
 		}
 	}

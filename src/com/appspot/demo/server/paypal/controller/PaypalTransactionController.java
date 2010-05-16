@@ -1,7 +1,11 @@
 package com.appspot.demo.server.paypal.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import com.appspot.demo.server.paypal.dao.InvoiceDao;
 import com.appspot.demo.server.paypal.dao.PackageDao;
 import com.appspot.demo.server.paypal.dao.PaypalCustomerDao;
 import com.appspot.demo.server.paypal.dao.PaypalTransactionDao;
+import com.appspot.demo.server.paypal.model.Invoice;
 import com.appspot.demo.server.paypal.model.PaypalTransaction;
 import com.appspot.demo.server.paypal.service.UserInfoService;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -52,6 +57,27 @@ public class PaypalTransactionController {
 		}
 		model.addAttribute("transactionDtoList", transactionDtos);
 		return "transactionDtoList";
+	}
+	
+	@RequestMapping(value="/invoice/{invoiceId}/startDate/{startDate}/endDate/{endDate}/get", method=RequestMethod.GET)
+	public String getTransactionBetween(@PathVariable String invoiceId, @PathVariable String startDate, @PathVariable String endDate, Model model){
+		logger.info("Start date is "+ startDate);
+		logger.info("End date is "+ endDate);
+		Date start = this.parseDate(startDate);
+		Date end = this.parseDate(endDate);
+		Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
+		if(start!=null && end!=null){
+			Collection<PaypalTransaction> transactions = this.paypalTransactionDao.getTransactionsByDate(invoice, start, end, this.userInfoService.getCurrentApplicationUser());
+			List<PaypalTransactionDto> transactionDtos = new ArrayList<PaypalTransactionDto>();
+			for(PaypalTransaction transaction: transactions){
+				transactionDtos.add(this.convertPaypalTransactionToDto(transaction));
+			}
+			model.addAttribute("transactionDtoList", transactionDtos);
+			return "transactionDtoList";
+		}
+		else{
+			return null;
+		}
 	}
 	
 	private PaypalTransactionDto convertPaypalTransactionToDto(PaypalTransaction paypalTransaction){
@@ -100,6 +126,18 @@ public class PaypalTransactionController {
 		paypalTransactionDto.setPaymentItemOptionValue(paypalTransaction.getPaymentItemOptionValue());
 		
 		return paypalTransactionDto;
+	}
+	
+	private Date parseDate(String date){
+		//SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+		try {
+			return dateFormat.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			logger.warning("Unable to parse Date");
+			return null;
+		}
 	}
 
 }

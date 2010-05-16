@@ -1,6 +1,8 @@
 package com.appspot.demo.server.paypal.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.appspot.demo.server.paypal.model.Invoice;
+import com.appspot.demo.server.paypal.model.PaypalApplicationUser;
 import com.appspot.demo.server.paypal.model.PaypalTransaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
 
 @Repository
 public class PaypalTransactionDaoImpl implements PaypalTransactionDao{
@@ -74,6 +78,31 @@ public class PaypalTransactionDaoImpl implements PaypalTransactionDao{
 			if(pm.currentTransaction().isActive()){
 				pm.currentTransaction().rollback();
 			}
+			pm.close();
+		}
+		
+	}
+	
+	public Collection<PaypalTransaction> getTransactionsByDate(Invoice invoice, Date startDate, Date endDate, PaypalApplicationUser appUser){
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try{
+			Query query = pm.newQuery("select id from "+PaypalTransaction.class.getName());
+			query.setFilter("paypalApplicationUser == appUserParam && invoiceId == invoiceParam");
+			query.declareParameters("com.google.appengine.api.datastore.Key appUserParam, com.google.appengine.api.datastore.Key invoiceParam");
+			List ids =(List) query.execute(appUser.getId(), invoice.getId());
+			Collection<PaypalTransaction> transactions = new ArrayList<PaypalTransaction>();
+			if(ids.size()>0){
+				logger.info("Size is > 0");
+				query = pm.newQuery(PaypalTransaction.class);
+				query.setFilter("dateCreated >=startDate && dateCreated <=endDate && tnxIds.contains(id)");
+				query.setOrdering("dateCreated desc");
+				query.declareParameters("java.util.Date startDate, java.util.Date endDate, java.util.List txnIds");
+				transactions = pm.detachCopyAll((Collection<PaypalTransaction>)query.execute(startDate, endDate, ids));
+			}
+			
+			return transactions;
+		}
+		finally{
 			pm.close();
 		}
 		

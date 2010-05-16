@@ -21,7 +21,7 @@ public class PaypalSuccess implements EntryPoint {
 			Label label = new Label("Failed to Purchase Package");
 			RootPanel.get().add(label);
 		}
-		Anchor packageListLink = new Anchor("Back to Package List", "http://choonkeedemo.appspot.com/demo/paypal/productpackage/view");
+		Anchor packageListLink = new Anchor("Back to Package List", "https://choonkeedemo.appspot.com/demo/paypal/productpackage/view");
 		RootPanel.get().add(packageListLink);
 	}
 

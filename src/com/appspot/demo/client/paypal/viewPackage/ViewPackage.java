@@ -26,7 +26,7 @@ public class ViewPackage implements EntryPoint {
 	}
 
 	private void getProductPackage(String packageKey){
-		String requestURL="http://choonkeedemo.appspot.com/demo/paypal/productpackage/get/"+packageKey+".json";
+		String requestURL="https://choonkeedemo.appspot.com/demo/paypal/productpackage/get/"+packageKey+".json";
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, requestURL);
 		requestBuilder.setHeader("Content-Type", "application/json");
 		try{

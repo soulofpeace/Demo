@@ -134,8 +134,8 @@ public class ProductPackageController {
 			caller.setAPIProfile(profile);
 			encoder.add("VERSION", "51.0");			
 			encoder.add("METHOD","SetExpressCheckout");
-			encoder.add("RETURNURL", "http://choonkeedemo/demo/paypal/Paypal.html");
-			encoder.add("CANCELURL", "http://choonkeedemo/demo/paypal/Paypal.html");	
+			encoder.add("RETURNURL", "https://choonkeedemo/demo/paypal/Paypal.html");
+			encoder.add("CANCELURL", "https://choonkeedemo/demo/paypal/Paypal.html");	
 			encoder.add("AMT", "50");
 			encoder.add("PAYMENTACTION","Sale");
 			encoder.add("CURRENCYCODE","USD");

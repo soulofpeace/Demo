@@ -67,9 +67,9 @@ public class PaymentController {
 	private ActionLoggerService actionLoggerService;
 	
 	
-	private static final String createURL="http://choonkeedemo.appspot.com/demo/paypal/payment/create";
+	private static final String createURL="https://choonkeedemo.appspot.com/demo/paypal/payment/create";
 	
-	private static final String cancelURL="http://choonkeedemo.appspot.com/demo/paypal/payment/cancel";
+	private static final String cancelURL="https://choonkeedemo.appspot.com/demo/paypal/payment/cancel";
 	
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.GET)
@@ -99,7 +99,7 @@ public class PaymentController {
 		keys.add(KeyFactory.stringToKey(productPackageId));
 		keys.add(this.userInfoService.getCurrentApplicationUser().getId());
 		this.actionLoggerService.log(ActionType.CANCELTRANSACTION, ActionSource.WEB, comment, keys);
-		return "redirect:http://choonkeedemo.appspot.com/demo/paypal/productpackage/view";
+		return "redirect:https://choonkeedemo.appspot.com/demo/paypal/productpackage/view";
 	}
 	
 	@RequestMapping(value="/start", method=RequestMethod.POST)
@@ -179,7 +179,7 @@ public class PaymentController {
 					session.setAttribute("customerId", customerId);
 				}
 			
-				return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/viewPayment?packageKey="+productId;
+				return "redirect:https://choonkeedemo.appspot.com/demo/paypal/payment/viewPayment?packageKey="+productId;
 			}
 			else{
 				return null;
@@ -226,7 +226,7 @@ public class PaymentController {
 					keys.add(customer.getId());
 					keys.add(KeyFactory.stringToKey(invoiceId));
 					this.actionLoggerService.log(ActionType.NEWINVOICE, ActionSource.WEB, null, keys);
-					return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=true";
+					return "redirect:https://choonkeedemo.appspot.com/demo/paypal/payment/result?success=true";
 				}
 				else{
 					List<Key> keys = new ArrayList<Key>();
@@ -234,17 +234,17 @@ public class PaymentController {
 					keys.add(productPackage.getId());
 					keys.add(customer.getId());
 					this.actionLoggerService.log(ActionType.FAILEDINVOICE, ActionSource.WEB, null, keys);
-					return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
+					return "redirect:https://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
 				}
 				
 			}
 			else{
-				return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
+				return "redirect:https://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
 			}
 		}
 		catch(PaypalException ex){
 			ex.printStackTrace();
-			return "redirect:http://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
+			return "redirect:https://choonkeedemo.appspot.com/demo/paypal/payment/result?success=false";
 		}
 		
 	}
@@ -257,7 +257,7 @@ public class PaymentController {
 		String subject = "Successful Purchase of Package "+productPackage.getPackageName();
 		String greetings="Hi "+userName+",\n";
 		String body = "You have successfully purchase "+productPackage.getPackageName()+"\n";
-		body +="View the package Details at http://choonkeedemo.appspot.com/demo/paypal/productpackage/view/"+KeyFactory.keyToString(productPackage.getId())+"\n\n";
+		body +="View the package Details at https://choonkeedemo.appspot.com/demo/paypal/productpackage/view/"+KeyFactory.keyToString(productPackage.getId())+"\n\n";
 		String signOff ="From\nThe SocialWok Team\n\n";
 		String disclaimer="This is an computer generated email\n";
 		String message=greetings+body+signOff+disclaimer;

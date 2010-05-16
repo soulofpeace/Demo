@@ -26,6 +26,10 @@
         <property name="createdDate" direction="desc"/>
     </datastore-index>
     
+    <datastore-index kind="PaypalTransaction" ancestor="false" source="manual">
+    	<property name="paypalApplicationUser" direction="asc"/>
+    	<property name="invoiceId" direction="asc"/>
+    </datastore-index>
 
     
 
